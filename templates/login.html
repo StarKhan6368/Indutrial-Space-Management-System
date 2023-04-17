@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="{{url_for('static', filename='css/login.css')}}" rel="stylesheet" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer" />
+    <title>Login Page</title>
+  </head>
+  <body class="dark:bg-[#17343D] dark:text-white">
+    <div class="container flex mx-auto justify-center items-center min-h-screen">
+      <div class="flex flex-col md:flex-row md:space-x-8 md:space-y-5 lg:pl-10 pb-5 rounded-2xl">
+        <div class="hidden w-1/2 pt-10 lg:block hover:scale-105 duration-500">
+          <img src="{{url_for('static', filename='images/iot.png')}}" alt="" class="rounded-xl" />
+        </div>
+        <div class="flex flex-col space-y-2 lg:pl-10">
+          <div class="flex">
+            <div class="scale-90 w-14 hover:animate-pulse hover:scale-100 duration-200">
+              <img src="{{url_for('static', filename='images/iot_logo.png')}}" alt="" class="dark:brightness-150" />
+            </div>
+            <h1 class="text-xl pt-3 pl-2 font-bold hover:scale-105 duration-200">Industrial Space Management System</h1>
+          </div>
+          <h2 class="font-semibold text-lg pt-3">Welcome back! It's nice to see you.</h2>
+          <form method="POST" class="space-y-3" action="/login">
+            {{ form.hidden_tag() }}
+            <fieldset class="space-y-3 md:space-y-1 text-left">
+              <p class="hidden text-sm font-light pl-2 md:block">Login</p>
+              {{ form.email_id(class="dark:text-black bg-slate-200 pl-2 pr-48
+                rounded-md py-2 focus:outline-none dark:bg-white", placeholder="Email Address")}}
+              {% if form.email_id.errors %}
+              <p class="text-sm pl-2" style="color: #D6705C">{{ form.email_id.errors[0] }}</p>
+              {% endif %}
+              <p class="hidden text-sm font-light pl-2 md:block md:pt-2">Password</p>
+              <div class="dark:text-black bg-slate-200 rounded-md">
+                {{ form.password(class="bg-slate-200 pl-2 pr-40 rounded-l-md py-2 focus:outline-none dark:bg-white",
+                placeholder="Enter Password", id="login-password") }}
+                <button id="show-password">
+                  <i class="pl-1 fa-solid fa-eye dark:text-black"></i>
+                </button>
+              </div>
+              <div class="flex justify-between" style="padding-top: 10px">
+                <div class="flex flex-row space-x-2">
+                  {{ form.remember() }}
+                  <p class="text-sm font-light">Remember Me</p>
+                </div>
+                <a href="#"><p class="text-sm text-[#43ABB1] hover:text-[#026E74]">Forgot Password ?</p></a>
+              </div>
+              <div>
+                {{ form.submit_login(class="bg-[#43ABB1] text-white text-xl py-2 rounded-xl hover:bg-[#026E74]
+                hover:scale-105 duration-200 w-full") }}
+              </div>
+            </fieldset>
+          </form>
+          <h2 class="font-light text-center pt-3">
+            Don't have an account ?<a href="#" class="text-[#43ABB1] font-normal hover:text-[#026E74]"> Register now</a>
+          </h2>
+        </div>
+      </div>
+    </div>
+    <script src="{{url_for('static', filename='js/login.js')}}"></script>
+  </body>
+</html>
