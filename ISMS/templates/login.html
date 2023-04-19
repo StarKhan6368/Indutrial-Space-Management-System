@@ -11,6 +11,7 @@
   </head>
 
   <body class="font-sans">
+    {{}}
     <div class="container flex items-center justify-center min-h-screen mx-auto md:p-5">
       <div class="hidden duration-500 hover:scale-105 lg:block">
         <img src="{{url_for('static', filename='images/iot.png')}}" alt="" class=" rounded-2xl" />
@@ -37,6 +38,10 @@
                 placeholder="Enter Password", id="login-password", id="login-password") }}
                 <span class="pl-2"><i class="cursor-pointer fa-solid fa-eye fa-lg" id="show-pass"></i></span>
               </div>
+            </label>
+            <label for="remember-me" class="flex items-center space-x-2">
+              {{ form.remember_me(type="checkbox", id="remember-me") }}
+              <span class="text-sm font-light">Remember me</span>
             </label>
             <button type="submit"
               class="px-4 py-2 mt-1 font-bold text-white duration-500 bg-blue-500 rounded-md hover:bg-blue-700 hover:scale-105">
