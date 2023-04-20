@@ -1,0 +1,77 @@
+{% extends 'layout.html' %}
+{% block head %}
+<title>Signup Page</title>
+<link rel="stylesheet" href="{{url_for('static', filename='css/signup.css')}}">
+{% endblock %}
+{% block main %}
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<ul class="container flex justify-center py-1 mx-auto">
+    {% for message in messages %}
+    <div class="flex justify-between w-full px-4 py-3 text-red-700 bg-red-100 border border-red-400 rounded">
+        <li class="font-bold">{{ message }}</li>
+        <span><i class="fa fa-x hover:cursor-pointer" id="dismiss"></i></span>
+    </div>
+    {% endfor %}
+</ul>
+{% endif %}
+{% endwith %}
+<div class="container flex items-center justify-center min-h-screen mx-auto">
+    <div class="hidden duration-500 hover:scale-105 lg:block">
+        <img src="{{url_for('static', filename='images/iot.png')}}" alt=""
+            class="shadow-lg rounded-3xl shadow-teal-900">
+    </div>
+    <div class="space-y-5 md:pl-10">
+        <div class="flex items-center space-x-3">
+            <div class="duration-200 scale-90 w-14 hover:animate-pulse hover:scale-100">
+                <img src="{{url_for('static', filename='images/iot_logo.png')}}" alt="">
+            </div>
+            <h1 class="text-xl font-bold duration-500 hover:scale-x-105">Industrial Space Management System</h1>
+        </div>
+        <div class="space-y-3">
+            <p class="text-lg font-medium">Sign up now and get access to monitoring services!</p>
+            <form action="/signup" method="POST" class="grid gap-2">
+                {{ form.hidden_tag() }}
+                <label for="email" class="flex flex-col">
+                    <span class="pl-2 text-sm font-light">Email</span>
+                    {{ form.email_id(class="rounded-md", placeholder="JohnDoe@mail.com", type="email") }}
+                </label>
+                <label for="emp-id" class="flex flex-col">
+                    <span class="pl-2 text-sm font-light">Employee ID</span>
+                    {{ form.emp_id(class="rounded-md", placeholder="XXXX-XXXX-XXXX-XXXX", id="emp-id") }}
+                </label>
+                <div class="flex flex-col md:flex-row md:space-x-2">
+                    <label for="password" class="flex flex-col">
+                        <span class="pl-2 text-sm font-light">Password</span>
+                        {{ form.password(class="rounded-md", placeholder="********", id="password") }}
+                    </label>
+                    <div>
+                        <label for="login-password" class="flex flex-col">
+                            <span class="pl-2 text-sm font-light">Confirm Password</span>
+                            <div class="flex items-center">
+                                {{ form.confirm_password(class="rounded-md", placeholder="********", id="confirm-password") }}
+                                <span class="pl-2"><i class="cursor-pointer fa-solid fa-eye fa-lg"
+                                        id="show-pass"></i></span>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+                {% if form.password.errors %}
+                {% for error in form.password.errors %}
+                <p class="font-bold pl-2 text-red-600">{{error}}</p>
+                {% endfor %}
+                {% endif %}
+                <button type="submit"
+                    class="px-4 py-2 mt-1 font-bold text-white duration-500 bg-blue-500 rounded-md col-span-full hover:bg-blue-700 hover:scale-105">SignUp
+                </button>
+            </form>
+            <p class="mt-2 text-sm text-center">
+                Already have an account ? <a href="{{url_for('login')}}" class="text-blue-700">Login Now</a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script src="{{url_for('static', filename='js/signup.js')}}"></script>
+{% endblock %}

@@ -2,6 +2,7 @@ const APP = {
     showPassBtn : document.getElementById("show-pass"),
     loginPass: document.getElementById("login-password"),
     emailId: document.getElementById("login-email"),
+    dismissBtn : document.querySelectorAll("#dismiss"),
     addListeners () {
         APP.showPassBtn.addEventListener("click", (e) => {
             if (APP.showPassBtn.classList.contains("fa-eye")) {
@@ -14,6 +15,13 @@ const APP = {
                 APP.loginPass.type = "password";
             }
         });
+        if(APP.dismissBtn.length !== 0) {
+            APP.dismissBtn.forEach((btn) => {
+                btn.addEventListener("click", () => {
+                    btn.parentElement.parentElement.remove()
+                })
+            })
+        }
     },
 }
 
