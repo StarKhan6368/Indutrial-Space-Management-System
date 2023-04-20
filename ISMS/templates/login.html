@@ -1,60 +1,65 @@
-<!DOCTYPE html>
-<html lang="en">
-
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Login Page</title>
-    <link rel="stylesheet" href="{{url_for('static', filename='css/login.css')}}" />
-    <script src="https://kit.fontawesome.com/8bca54dccf.js" crossorigin="anonymous"></script>
-  </head>
-
-  <body class="font-sans">
-    {{}}
-    <div class="container flex items-center justify-center min-h-screen mx-auto md:p-5">
-      <div class="hidden duration-500 hover:scale-105 lg:block">
-        <img src="{{url_for('static', filename='images/iot.png')}}" alt="" class=" rounded-2xl" />
+{% extends 'layout.html' %}
+{% block head %}
+<title>Login Page</title>
+<link rel="stylesheet" href="{{url_for('static', filename='css/login.css')}}">
+{% endblock %}
+{% block main %}
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<ul class="container flex justify-center py-1 mx-auto">
+  {% for message in messages %}
+  <div class="flex justify-between w-full px-4 py-3 text-red-700 bg-red-100 border border-red-400 rounded items-center">
+    <li class="font-bold">{{ message }}</li>
+    <span><i class="fa fa-x hover:cursor-pointer" id="dismiss"></i></span>
+  </div>
+  {% endfor %}
+</ul>
+{% endif %}
+{% endwith %}
+<div class="container flex items-center justify-center min-h-screen mx-auto md:p-5">
+  <div class="hidden duration-500 hover:scale-105 lg:block">
+    <img src="{{url_for('static', filename='images/iot.png')}}" alt="" class="shadow-lg rounded-3xl shadow-teal-900" />
+  </div>
+  <div class="md:pl-8 ">
+    <div class="flex items-center space-x-1">
+      <div class="duration-200 scale-90 w-14 hover:animate-pulse hover:scale-100">
+        <img src="{{url_for('static', filename='images/iot_logo.png')}}" alt="" />
       </div>
-      <div class="md:pl-8 ">
-        <div class="flex items-center space-x-1">
-          <div class="duration-200 scale-90 w-14 hover:animate-pulse hover:scale-100">
-            <img src="{{url_for('static', filename='images/iot_logo.png')}}" alt="" />
-          </div>
-          <h1 class="text-xl font-bold duration-500 hover:scale-x-105">Industrial Space Management System</h1>
-        </div>
-        <div class="mt-4 space-y-3">
-          <p class="text-lg font-semibold">Welcome back, It's nice to see you!</p>
-          <form action="/login" method="POST" class="grid grid-rows-2 gap-3">
-            {{ form.hidden_tag() }}
-            <label for="login-email" class="flex flex-col">
-              <span class="hidden text-sm font-light md:block">Email</span>
-              {{ form.email_id(class="rounded-md", placeholder="Email Address", type="email")}}
-            </label>
-            <label for="login-password" class="flex flex-col">
-              <span class="hidden text-sm font-light md:block">Password</span>
-              <div class="flex items-center">
-                {{ form.password(class="w-11/12 rounded-md",
-                placeholder="Enter Password", id="login-password", id="login-password") }}
-                <span class="pl-2"><i class="cursor-pointer fa-solid fa-eye fa-lg" id="show-pass"></i></span>
-              </div>
-            </label>
-            <label for="remember-me" class="flex items-center space-x-2">
-              {{ form.remember_me(type="checkbox", id="remember-me") }}
-              <span class="text-sm font-light">Remember me</span>
-            </label>
-            <button type="submit"
-              class="px-4 py-2 mt-1 font-bold text-white duration-500 bg-blue-500 rounded-md hover:bg-blue-700 hover:scale-105">
-              Log in
-            </button>
-          </form>
-          <p class="mt-1 text-sm text-center">
-            Don't have an account ? <a href="#" class="text-blue-700">Register Now</a>
-          </p>
-        </div>
-      </div>
+      <h1 class="text-xl font-bold duration-500 hover:scale-x-105">Industrial Space Management System</h1>
     </div>
-    <script src="{{url_for('static', filename='js/login.js')}}"></script>
-  </body>
+    <div class="mt-4 space-y-3">
+      <p class="text-lg">Welcome back, It's nice to see you!</p>
+      <form action="/login" method="POST" class="grid grid-rows-2 gap-3">
+        {{ form.hidden_tag() }}
+        <label for="login-email" class="flex flex-col">
+          <span class="pl-2 text-sm font-light">Email</span>
+          {{ form.email_id(class="rounded-md", placeholder="JohnDoe@mail.com", type="email")}}
+        </label>
+        <label for="login-password" class="flex flex-col">
+          <span class="pl-2 text-sm font-light">Password</span>
+          <div class="flex items-center">
+            {{ form.password(class="w-11/12 rounded-md",
+                placeholder="********", id="login-password", id="login-password") }}
+            <span class="pl-2"><i class="cursor-pointer fa-solid fa-eye fa-lg" id="show-pass"></i></span>
+          </div>
+        </label>
+        <label for="remember-me" class="flex items-center space-x-2">
+          {{ form.remember_me(type="checkbox", id="remember-me") }}
+          <span class="text-sm font-light">Remember me</span>
+        </label>
+        <button type="submit"
+          class="px-4 py-2 mt-1 font-bold text-white duration-500 bg-blue-500 rounded-md hover:bg-blue-700 hover:scale-105">
+          Log in
+        </button>
+      </form>
+      <p class="mt-1 text-sm text-center">
+        Don't have an account ? <a href="{{url_for('signup')}}" class="text-blue-700">Register Now</a>
+      </p>
+    </div>
+  </div>
+</div>
 
-</html>
+{% endblock %}
+{% block scripts %}
+<script src="{{url_for('static', filename='js/login.js')}}"></script>
+{% endblock %}
