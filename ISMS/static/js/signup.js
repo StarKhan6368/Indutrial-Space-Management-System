@@ -1,21 +1,16 @@
 const APP = {
-    showPass : document.getElementById("show-pass"),
-    password : document.getElementById("password"),
-    confirmPassword : document.getElementById("confirm-password"),
+    showPassBtn : document.getElementById("show-pass"),
+    loginPass: document.getElementById("password"),
+    confirmLoginPass: document.getElementById("confirm-password"),
     dismissBtn : document.querySelectorAll("#dismiss"),
-    addListeners() {
-        APP.showPass.addEventListener("click", () => {
-            if (APP.password.type === "password") {
-                APP.password.type = "text";
-                APP.confirmPassword.type = "text";
-                APP.showPass.classList.add("fa-eye-slash");
-                APP.showPass.classList.remove("fa-eye");
-            } else {
-                APP.password.type = "password";
-                APP.confirmPassword.type = "password";
-                APP.showPass.classList.add("fa-eye");
-                APP.showPass.classList.remove("fa-eye-slash");
-            }
+    switchEye : 'M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88',
+    addListeners () {
+        APP.showPassBtn.addEventListener("click", (e) => {
+            let temp_var = APP.showPassBtn.firstElementChild.getAttribute('d');
+            APP.showPassBtn.firstElementChild.setAttribute('d', APP.switchEye);
+            APP.loginPass.type = APP.loginPass.type === 'password' ? 'text' : 'password';
+            APP.confirmLoginPass.type = APP.confirmLoginPass.type === 'password' ? 'text' : 'password';
+            APP.switchEye = temp_var
         });
         if(APP.dismissBtn.length !== 0) {
             APP.dismissBtn.forEach((btn) => {
@@ -24,7 +19,7 @@ const APP = {
                 })
             })
         }
-    }
+    },
 }
 
-window.addEventListener("DOMContentLoaded", APP.addListeners);
+document.addEventListener("DOMContentLoaded", APP.addListeners)

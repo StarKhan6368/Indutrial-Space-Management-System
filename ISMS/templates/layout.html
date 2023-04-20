@@ -1,19 +1,104 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-      integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
-      crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="{{url_for('static', filename='css/layout.css')}}">
     {% block head %}{% endblock %}
   </head>
 
-  <body class="font-sans">
-    <header></header>
-    {% block main %}{% endblock %}
-    <footer></footer>
+  <body>
+    <div class="flex">
+      <nav class="flex flex-col justify-between w-16 min-h-screen bg-gray-800">
+        <div>
+          <div class="flex items-center justify-center h-16 bg-blue-600">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+              stroke="currentColor" class="w-8 h-8 stroke-white hover:animate-spin">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.746 3.746 0 011.043 3.296A3.745 3.745 0 0121 12z" />
+            </svg>
+          </div>
+          <ul class="pt-5 space-y-6 list-none">
+            <li class="flex items-center justify-center">
+              <div class="flex items-center justify-center w-10 h-10 rounded-md group hover:bg-white" id="home">
+                <a href="{{url_for('index')}}">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                    stroke="currentColor" class="w-6 h-6 stroke-white group-hover:stroke-gray-800">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                      d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
+                  </svg>
+                </a>
+              </div>
+            </li>
+            <li class="flex items-center justify-center">
+              <div class="flex items-center justify-center w-10 h-10 rounded-md group hover:bg-white" id="dashboard">
+                <a href="{{url_for('dashboard')}}">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                    stroke="currentColor" class="w-6 h-6 stroke-white group-hover:stroke-gray-800">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                      d="M7.5 14.25v2.25m3-4.5v4.5m3-6.75v6.75m3-9v9M6 20.25h12A2.25 2.25 0 0020.25 18V6A2.25 2.25 0 0018 3.75H6A2.25 2.25 0 003.75 6v12A2.25 2.25 0 006 20.25z" />
+                  </svg>
+                </a>
+              </div>
+            </li>
+            <li class="flex items-center justify-center">
+              <div class="flex items-center justify-center w-10 h-10 rounded-md group hover:bg-white" id="users">
+                <a href="{{url_for('users')}}">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                    stroke="currentColor" class="w-6 h-6 stroke-white group-hover:stroke-gray-800">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                      d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
+                  </svg>
+                </a>
+              </div>
+            </li>
+          </ul>
+        </div>
+        <div class="flex flex-col items-center justify-center pb-2">
+          <div class="w-10/12 mb-1 border border-slate-500"></div>
+          <div class="flex items-center justify-center w-10 h-10 rounded-md group hover:bg-white" id="settings">
+            <a href="{{url_for('settings')}}">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                stroke="currentColor" class="w-6 h-6 stroke-white group-hover:stroke-gray-800">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75" />
+              </svg>
+            </a>
+          </div>
+        </div>
+      </nav>
+      <div class="flex flex-col w-full">
+        <header
+          class="flex w-full h-16 space-x-1 border-b-2 border-gray-800 md:space-x-5 drop-shadow-md border-inherit shadow-inherit">
+          <img src="{{url_for('static', filename='images/iot_logo.png')}}" alt="" class="pl-2 my-3 hover:animate-pulse">
+          <div class="flex items-center justify-end w-full md:justify-between">
+            <h1 class="text-xs font-semibold md:text-lg">Industrial Space Management System</h1>
+            <div class="flex items-center">
+              <a href="{{url_for('profile')}}">
+                <img src="{{url_for('static', filename='images/avatar.jpg')}}" alt="" heigt="12" width="30"
+                  class="duration-500 rounded-full hover:scale-150 hover:pr-2">
+              </a>
+              <div class="flex flex-col items-center pl-2">
+                <p class="text-sm font-bold">John Doe</p>
+                <p class="hidden text-xs font-light text-right md:block">Manager</p>
+              </div>
+              <div class="flex flex-col items-center pl-5 pr-3">
+                <a href="{{url_for('logout')}}">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                    stroke="currentColor" class="w-6 h-6 hover:animate-ping">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                      d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
+                  </svg>
+                </a>
+                <p class="text-xs font-light">Logout</p>
+              </div>
+            </div>
+          </div>
+        </header>
+        <main class="h-full space-y-5 bg-gray-100">{% block main %}{% endblock %}</main>
+      </div>
+    </div>
     {% block scripts %}{% endblock %}
   </body>
 
