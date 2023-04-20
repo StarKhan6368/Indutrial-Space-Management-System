@@ -377,6 +377,19 @@ button,
 [role="button"] {
   cursor: pointer;
 }
+.h-1 {
+  height: 2rem/* 4px */;
+}
+.w-1 {
+  width: 2rem/* 4px */;
+}
+.bg-gray-100 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(243 244 246 / var(--tw-bg-opacity));
+}
+.w-11\/12 {
+  width: 91.666667%;
+}
 
 /*
 Make sure disabled buttons don't get the pointer cursor.

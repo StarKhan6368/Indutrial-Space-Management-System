@@ -2,7 +2,7 @@ from flask import render_template, redirect, url_for, flash
 from flask_login import login_user, logout_user, current_user
 from ISMS import app, db, bcrypt
 from ISMS.forms import LoginForm, SignupForm
-from ISMS.models import Users
+from ISMS.models import Users, Employees
 
 
 @app.route("/")
@@ -31,13 +31,16 @@ def signup():
         signup_form = SignupForm()
         if signup_form.validate_on_submit():
             user = Users.query.filter_by(email_id=signup_form.email_id.data).first()
-            if not user:
+            employee = Employees.query.filter_by(emp_id=signup_form.emp_id.data).first()
+            if not user and employee:
                 hashed_password = bcrypt.generate_password_hash(signup_form.password.data).decode("utf-8")
                 new_user = Users(emp_id=signup_form.emp_id.data, email_id=signup_form.email_id.data, password=hashed_password)
                 db.session.add(new_user)
                 db.session.commit()
                 login_user(new_user)
                 redirect(url_for('index'))
+            elif not employee:
+                flash("Invalid Employee ID", "danger")
             else:
                 flash("User with this Email already exists", "danger")
         return render_template("signup.html", form=signup_form)
@@ -48,3 +51,19 @@ def logout():
     if current_user.is_authenticated:
         logout_user()
     return redirect(url_for('login'))
+
+@app.route("/dashboard")
+def dashboard():
+    return "HELLO"
+
+@app.route("/profile")
+def profile():
+    return "HELLO"
+
+@app.route("/users")
+def users():
+    return "HELLO"
+
+@app.route("/settings")
+def settings():
+    return "HELLO"
