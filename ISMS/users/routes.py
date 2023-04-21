@@ -2,7 +2,7 @@ from flask import Blueprint, redirect, url_for, render_template, flash
 from ISMS import bcrypt, db
 from flask_login import current_user, login_user, logout_user
 from ISMS.users.forms import LoginForm, SignupForm
-from ISMS.models import Users, Employees
+from ISMS.models import User, Employee
 users = Blueprint("users", __name__)
 
 @users.route("/login", methods=["GET","POST"])
@@ -10,7 +10,7 @@ def login():
     if not current_user.is_authenticated:
         login_form = LoginForm()
         if login_form.validate_on_submit():
-            check_user = Users.query.filter_by(email_id=login_form.email_id.data).first()
+            check_user = User.query.filter_by(email_id=login_form.email_id.data).first()
             if check_user and bcrypt.check_password_hash(check_user.password, login_form.password.data):
                 login_user(check_user, remember=login_form.remember_me.data)
                 return redirect(url_for('main.index'))
@@ -24,11 +24,11 @@ def signup():
     if not current_user.is_authenticated:
         signup_form = SignupForm()
         if signup_form.validate_on_submit():
-            user = Users.query.filter_by(email_id=signup_form.email_id.data).first()
-            employee = Employees.query.filter_by(emp_id=signup_form.emp_id.data).first()
+            user = User.query.filter_by(email_id=signup_form.email_id.data).first()
+            employee = Employee.query.filter_by(emp_id=signup_form.emp_id.data).first()
             if not user and employee:
                 hashed_password = bcrypt.generate_password_hash(signup_form.password.data).decode("utf-8")
-                new_user = Users(emp_id=signup_form.emp_id.data, email_id=signup_form.email_id.data, password=hashed_password)
+                new_user = User(emp_id=signup_form.emp_id.data, email_id=signup_form.email_id.data, password=hashed_password)
                 db.session.add(new_user)
                 db.session.commit()
                 login_user(new_user)

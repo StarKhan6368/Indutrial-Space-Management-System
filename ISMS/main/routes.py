@@ -1,6 +1,7 @@
 from flask import Blueprint, redirect, render_template,url_for
 from flask_login import current_user
-
+from ISMS import db
+from ISMS.models import Sensor, User, Employee, Cluster
 main = Blueprint("main", __name__)
 
 @main.route("/")

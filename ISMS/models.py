@@ -3,11 +3,11 @@ from flask_login import UserMixin
 
 @login_manager.user_loader
 def load_user(id):
-    return Users.query.get(id)
+    return User.query.get(id)
 
-class Users(db.Model, UserMixin):
+class User(db.Model, UserMixin):
     __tablename__ = "users"
-    emp_id = db.Column(db.String(16), primary_key=True, nullable=False)
+    emp_id = db.Column(db.String(16), db.ForeignKey('employees.emp_id'), primary_key=True, nullable=False)
     email_id = db.Column(db.String(40), unique=True, nullable=False)
     password = db.Column(db.String(60), nullable=False)
     acc_created = db.Column(db.DateTime, nullable=False, default=db.func.current_timestamp())
@@ -21,9 +21,9 @@ class Users(db.Model, UserMixin):
         return (self.emp_id)
         
     def __repr__(self):
-        return f"User('{self.emp_number}', '{self.first_name}', '{self.last_name}', '{self.gender}', '{self.date_of_birth}', '{self.email}', '{self.password}', '{self.phone_number}', '{self.encoded_photo}')"
+        return f"User('{self.emp_id}', '{self.email_id}', '{self.password}')"
     
-class Employees(db.Model):
+class Employee(db.Model):
     __tablename__ = "employees"
     emp_id = db.Column(db.String(16), primary_key=True, nullable=False)
     first_name = db.Column(db.String(20), nullable=False)
@@ -33,8 +33,9 @@ class Employees(db.Model):
     enc_photo = db.Column(db.Text, nullable=False)
     phone_number = db.Column(db.String(10), nullable=True)
     address = db.Column(db.Text, nullable=True)
+    users = db.relationship('User', backref='employee')
     
-    def __init__(self, emp_id: str, first_name: str, last_name: str, gender: str, date_of_birth: str, end_photo: str, phone_number: str, address: str):
+    def __init__(self, emp_id: str, first_name: str, last_name: str, gender: str, date_of_birth: str, enc_photo: str, phone_number: str, address: str):
         self.emp_id = emp_id
         self.first_name = first_name
         self.last_name = last_name
@@ -46,3 +47,34 @@ class Employees(db.Model):
         
     def __repr__(self):
         return f"Employee('{self.emp_id}', '{self.first_name}', '{self.last_name}', '{self.gender}', '{self.date_of_birth}', '{self.enc_photo}', '{self.phone_number}', '{self.address}')"
+
+class Cluster(db.Model):
+    __tablename__ = "clusters"
+    id = db.Column(db.Integer, primary_key=True, nullable=False)
+    name = db.Column(db.String(20), nullable=False)
+    location = db.Column(db.Text, nullable=False)
+    sensors = db.relationship('Sensor', backref='cluster')
+    
+    def __init__(self, name: str, location: str):
+        self.name = name
+        self.location = location
+        
+    def __repr__(self) -> str:
+        return f"Cluster('{self.id}, {self.name}', '{self.location}')"
+    
+class Sensor(db.Model):
+    __tablename__ = "clusters_data"
+    date_time = db.Column(db.DateTime, nullable=False, primary_key=True, default=db.func.current_timestamp())
+    cluster_id = db.Column(db.Integer, db.ForeignKey("clusters.id"), nullable=False)
+    temperature = db.Column(db.Numeric(10,2), nullable=False)
+    humidity = db.Column(db.Numeric(10,2), nullable=False)
+    pressure = db.Column(db.Numeric(10,2), nullable=False)
+    
+    def __init__(self, cluster_id, temperature, humidity, pressure):
+        self.cluster_id = cluster_id
+        self.temperature = temperature
+        self.humidity = humidity
+        self.pressure = pressure
+        
+    def __repr__(self) -> str:
+        return f"Sensor('{self.date_time}', '{self.cluster_id}', '{self.temperature}', '{self.humidity}', '{self.pressure}')"
