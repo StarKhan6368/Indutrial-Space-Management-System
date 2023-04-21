@@ -1,17 +1,11 @@
-from flask import render_template, redirect, url_for, flash
-from flask_login import login_user, logout_user, current_user
-from ISMS import app, db, bcrypt
-from ISMS.forms import LoginForm, SignupForm
+from flask import Blueprint, redirect, url_for, render_template, flash
+from ISMS import bcrypt, db
+from flask_login import current_user, login_user, logout_user
+from ISMS.users.forms import LoginForm, SignupForm
 from ISMS.models import Users, Employees
+users = Blueprint("users", __name__)
 
-
-@app.route("/")
-def index():
-    if not current_user.is_authenticated:
-        return redirect(url_for('login'))
-    return render_template("index.html")
-
-@app.route("/login", methods=["GET","POST"])
+@users.route("/login", methods=["GET","POST"])
 def login():
     if not current_user.is_authenticated:
         login_form = LoginForm()
@@ -19,13 +13,13 @@ def login():
             check_user = Users.query.filter_by(email_id=login_form.email_id.data).first()
             if check_user and bcrypt.check_password_hash(check_user.password, login_form.password.data):
                 login_user(check_user, remember=login_form.remember_me.data)
-                return redirect(url_for('index'))
+                return redirect(url_for('main.index'))
             else:
                 flash("Invalid email or password", "danger")
         return render_template("login.html", form=login_form)
-    return redirect(url_for("index"))
+    return redirect(url_for("main.index"))
 
-@app.route("/signup", methods=["GET","POST"])
+@users.route("/signup", methods=["GET","POST"])
 def signup():
     if not current_user.is_authenticated:
         signup_form = SignupForm()
@@ -38,32 +32,20 @@ def signup():
                 db.session.add(new_user)
                 db.session.commit()
                 login_user(new_user)
-                redirect(url_for('index'))
+                redirect(url_for('main.index'))
             elif not employee:
                 flash("Invalid Employee ID", "danger")
             else:
                 flash("User with this Email already exists", "danger")
         return render_template("signup.html", form=signup_form)
-    return redirect(url_for('index'))
+    return redirect(url_for('main.index'))
 
-@app.route("/logout")
+@users.route("/logout")
 def logout():
     if current_user.is_authenticated:
         logout_user()
-    return redirect(url_for('login'))
+    return redirect(url_for('users.login'))
 
-@app.route("/dashboard")
-def dashboard():
-    return "HELLO"
-
-@app.route("/profile")
+@users.route("/profile")
 def profile():
-    return "HELLO"
-
-@app.route("/users")
-def users():
-    return "HELLO"
-
-@app.route("/settings")
-def settings():
     return "HELLO"

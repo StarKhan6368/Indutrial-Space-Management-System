@@ -10,4 +10,8 @@ db = SQLAlchemy(app)
 login_manager = LoginManager(app)
 bcrypt = Bcrypt(app)
 
-from ISMS import routes
+from ISMS.users.routes import users
+from ISMS.main.routes import main
+
+app.register_blueprint(users)
+app.register_blueprint(main)
