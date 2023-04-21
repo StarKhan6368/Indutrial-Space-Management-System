@@ -12,9 +12,9 @@
     <body class="bg-gray-100">
         {% with messages = get_flashed_messages() %}
         {% if messages %}
-        <ul class="container flex justify-center py-1 mx-auto">
+        <ul class="container flex justify-center py-1 mx-auto" style="padding-left: 3px; padding-right: 3px;">
             {% for message in messages %}
-            <div class="flex justify-between w-full px-4 py-3 text-red-700 bg-red-100 border border-red-400 rounded">
+            <div class=" flex justify-between w-full px-4 py-3 text-red-700 bg-red-100 border border-red-400 rounded">
                 <li class="font-bold">{{ message }}</li>
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                     stroke="currentColor" class="w-1 h-1 hover:cursor-pointer" id="dismiss">
@@ -31,7 +31,7 @@
                 <img src="{{url_for('static', filename='images/iot.png')}}" alt=""
                     class="shadow-lg rounded-3xl shadow-teal-900">
             </div>
-            <div class="space-y-5 md:pl-10">
+            <div class="space-y-5 md:pl-10" style="padding: 5px;">
                 <div class="flex items-center space-x-3">
                     <div class="duration-200 scale-90 w-14 hover:animate-pulse hover:scale-100">
                         <img src="{{url_for('static', filename='images/iot_logo.png')}}" alt="">
