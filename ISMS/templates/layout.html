@@ -22,7 +22,7 @@
           <ul class="pt-5 space-y-6 list-none">
             <li class="flex items-center justify-center">
               <div class="flex items-center justify-center w-10 h-10 rounded-md group hover:bg-white" id="home">
-                <a href="{{url_for('index')}}">
+                <a href="{{url_for('main.index')}}">
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                     stroke="currentColor" class="w-6 h-6 stroke-white group-hover:stroke-gray-800">
                     <path stroke-linecap="round" stroke-linejoin="round"
@@ -33,7 +33,7 @@
             </li>
             <li class="flex items-center justify-center">
               <div class="flex items-center justify-center w-10 h-10 rounded-md group hover:bg-white" id="dashboard">
-                <a href="{{url_for('dashboard')}}">
+                <a href="{{url_for('main.dashboard')}}">
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                     stroke="currentColor" class="w-6 h-6 stroke-white group-hover:stroke-gray-800">
                     <path stroke-linecap="round" stroke-linejoin="round"
@@ -44,7 +44,7 @@
             </li>
             <li class="flex items-center justify-center">
               <div class="flex items-center justify-center w-10 h-10 rounded-md group hover:bg-white" id="users">
-                <a href="{{url_for('users')}}">
+                <a href="{{url_for('main.users')}}">
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                     stroke="currentColor" class="w-6 h-6 stroke-white group-hover:stroke-gray-800">
                     <path stroke-linecap="round" stroke-linejoin="round"
@@ -58,7 +58,7 @@
         <div class="flex flex-col items-center justify-center pb-2">
           <div class="w-10/12 mb-1 border border-slate-500"></div>
           <div class="flex items-center justify-center w-10 h-10 rounded-md group hover:bg-white" id="settings">
-            <a href="{{url_for('settings')}}">
+            <a href="{{url_for('main.settings')}}">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                 stroke="currentColor" class="w-6 h-6 stroke-white group-hover:stroke-gray-800">
                 <path stroke-linecap="round" stroke-linejoin="round"
@@ -76,7 +76,7 @@
           <div class="flex items-center justify-end w-full md:justify-between">
             <h1 class="text-xs font-semibold md:text-lg">Industrial Space Management System</h1>
             <div class="flex items-center">
-              <a href="{{url_for('profile')}}">
+              <a href="{{url_for('users.profile')}}">
                 <img src="{{url_for('static', filename='images/avatar.jpg')}}" alt="" heigt="12" width="30"
                   class="duration-500 rounded-full hover:scale-150 hover:pr-2">
               </a>
@@ -85,7 +85,7 @@
                 <p class="hidden text-xs font-light text-right md:block">Manager</p>
               </div>
               <div class="flex flex-col items-center pl-5 pr-3">
-                <a href="{{url_for('logout')}}">
+                <a href="{{url_for('users.logout')}}">
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                     stroke="currentColor" class="w-6 h-6 hover:animate-ping">
                     <path stroke-linecap="round" stroke-linejoin="round"
