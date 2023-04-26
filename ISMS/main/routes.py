@@ -13,12 +13,18 @@ def index():
 
 @main.route("/dashboard")
 def dashboard():
-    return "HELLO"
+    if not current_user.is_authenticated:
+        return redirect(url_for('users.login'))
+    return render_template("dashboard.html")
 
 @main.route("/users")
 def users():
-    return "HELLO"
+    if not current_user.is_authenticated:
+        return redirect(url_for('users.login'))
+    return render_template("users.html")
 
 @main.route("/settings")
 def settings():
-    return "HELLO"
+    if not current_user.is_authenticated:
+        return redirect(url_for('users.login'))
+    return render_template("settings.html")
