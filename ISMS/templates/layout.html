@@ -8,9 +8,10 @@
     {% block head %}{% endblock %}
   </head>
 
-  <body>
+  <body class="bg-gray-100">
     <div class="flex">
-      <nav class="flex flex-col justify-between w-16 min-h-screen bg-gray-800">
+      <!-- Side Bar NavBar -->
+      <nav class="flex flex-col justify-between w-[4.1rem] min-h-screen bg-gray-800" id="sidebar-nav">
         <div>
           <div class="flex items-center justify-center h-16 bg-blue-600">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -19,6 +20,7 @@
                 d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.746 3.746 0 011.043 3.296A3.745 3.745 0 0121 12z" />
             </svg>
           </div>
+          <!-- Navigation List -->
           <ul class="pt-5 space-y-6 list-none">
             <li class="flex items-center justify-center">
               <div class="flex items-center justify-center w-10 h-10 rounded-md group hover:bg-white" id="home">
@@ -56,8 +58,8 @@
           </ul>
         </div>
         <div class="flex flex-col items-center justify-center pb-2">
-          <div class="w-10/12 mb-1 border border-slate-500"></div>
-          <div class="flex items-center justify-center w-10 h-10 rounded-md group hover:bg-white" id="settings">
+          <div class="w-10/12 mb-3 border border-slate-500"></div>
+          <div class="flex items-center justify-center w-10 h-10 mb-1 rounded-md group hover:bg-white" id="settings">
             <a href="{{url_for('main.settings')}}">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                 stroke="currentColor" class="w-6 h-6 stroke-white group-hover:stroke-gray-800">
@@ -68,18 +70,19 @@
           </div>
         </div>
       </nav>
-      <div class="flex flex-col w-full">
+      <!-- End Side Bar NavBar -->
+      <!-- Main Section -->
+      <div class="flex flex-col w-full justify-between">
+        <!-- Main Header -->
         <header
-          class="flex w-full h-16 space-x-1 border-b-2 border-gray-800 md:space-x-5 drop-shadow-md border-inherit shadow-inherit">
-          <img src="{{url_for('static', filename='images/iot_logo.png')}}" alt=""
-            class="hidden md:block pl-2 my-3 hover:animate-pulse">
+          class="flex h-16 space-x-1 bg-blue-100 border-b-2 border-gray-800 md:space-x-5 drop-shadow-md border-inherit shadow-inherit">
+          <img src="{{url_for('static', filename='images/iot_logo.png')}}" alt="" class="pl-2 my-3 hover:animate-spin"
+            id="logo">
           <div class="flex items-center justify-end w-full md:justify-between">
-            <h1 class="text-xs font-semibold md:text-lg">Industrial Space Management System</h1>
+            <h1 class="hidden text-xs font-semibold md:block md:text-lg">Industrial Space Management System</h1>
             <div class="flex items-center">
-              <a href="{{url_for('users.profile')}}">
-                <img src="{{url_for('static', filename='images/avatar.jpg')}}" alt="" heigt="12" width="30"
-                  class="duration-500 rounded-full hover:scale-150 hover:pr-2">
-              </a>
+              <img src="{{url_for('static', filename='images/avatar.jpg')}}" alt="" heigt="12" width="30"
+                class="duration-500 rounded-full hover:scale-150 hover:pr-2">
               <div class="flex flex-col items-center pl-2">
                 <p class="text-sm font-bold">John Doe</p>
                 <p class="hidden text-xs font-light text-right md:block">Manager</p>
@@ -92,14 +95,38 @@
                       d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
                   </svg>
                 </a>
-                <p class="text-xs font-light">Logout</p>
+                <p class="pr-2 text-xs font-light">Logout</p>
               </div>
             </div>
           </div>
         </header>
-        <main class="h-full space-y-5 bg-gray-100">{% block main %}{% endblock %}</main>
+        <!-- End Header -->
+        {% block main %}{% endblock %}
+        <!-- Footer -->
+        <footer aria-label="Site Footer"
+          class="bg-blue-100 border-t-2 border-gray-800 shadow-md border-inherit shadow-inherit">
+          <div class="w-full px-5 pb-1">
+            <div class="flex justify-between">
+              <div class="flex items-center space-x-2">
+                <img src="{{url_for('static', filename='images/iot_logo.png')}}" alt="" height="40" width="40"
+                  class="hover:animate-spin">
+                <h1 class="text-xs font-medium md:text-xl">Industrial Space Management System</h1>
+              </div>
+              <div class="flex flex-col items-center">
+                <a href="https://github.com">
+                  <img src="{{url_for('static', filename='images/github-mark.svg')}}" alt="" height="30" width="40"
+                    class="mt-1 duration-500 hover:scale-110">
+                </a>
+                <p class="hidden text-sm font-light md:block">Check out the project code at Github</p>
+              </div>
+            </div>
+          </div>
+        </footer>
+        <!-- End Footer -->
       </div>
+      <!-- End Main Section -->
     </div>
+    <script src="{{url_for('static', filename='js/layout.js')}}"></script>
     {% block scripts %}{% endblock %}
   </body>
 
