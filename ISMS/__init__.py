@@ -12,6 +12,8 @@ bcrypt = Bcrypt(app)
 
 from ISMS.users.routes import users
 from ISMS.main.routes import main
+from ISMS.api.routes import api
 
 app.register_blueprint(users)
 app.register_blueprint(main)
+app.register_blueprint(api)
