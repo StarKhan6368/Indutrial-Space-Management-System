@@ -75,6 +75,10 @@ class Cluster(db.Model):
     def __repr__(self) -> str:
         return f"Cluster('{self.id}, {self.name}', '{self.location}', {self.status})"
     
+    def as_dict(self, values):
+        cluster_data = {attr: getattr(self, attr) for attr in self.__table__.columns.keys()}
+        return cluster_data
+    
 class Sensor(db.Model):
     __tablename__ = "clusters_data"
     free_heap = db.Column(db.Integer, nullable=False)

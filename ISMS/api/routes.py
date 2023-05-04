@@ -28,7 +28,7 @@ def clusters():
     if not current_user.is_authenticated:
         return redirect(url_for('users.login'))
     data = Cluster.query.all()
-    data = [cluster.as_dict() for cluster in data]
+    data = [cluster.as_dict([]) for cluster in data]
     return json.dumps(data, default=str)
 
 
