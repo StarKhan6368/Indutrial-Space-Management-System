@@ -1,8 +1,142 @@
 {% extends 'layout.html' %}
 {% block head %}
-<title>Home</title>
+<title>Home-About</title>
 {% endblock %}
 {% block main %}
+<main class="flex flex-col p-2 mt-1 mb-auto ">
+    <h1 class="text-xl font-semibold text-center uppercase duration-500 md:text-3xl hover:scale-105 hover:ml-5">
+        Welcome to
+        Industrial
+        Space Management
+        System
+    </h1>
+    <article class="p-2 space-y-6 text-sm font-medium tracking-wide md:text-xl">
+        <div class="flex flex-col items-center p-4 rounded-md shadow-md">
+            <div class="grid gap-4 md:grid-cols-2 md:gap-0">
+                <img src="{{url_for('static', filename='images/iot.png')}}" alt=""
+                    class="duration-500 shadow-2xl rounded-2xl hover:scale-105 md:h-80 md:rounded-r-none md:rounded-l-2xl md:hover:mr-10">
+                <img src="{{url_for('static', filename='images/data_analytics.png')}}" alt=""
+                    class="duration-500 shadow-2xl rounded-2xl hover:scale-105 md:h-80 md:rounded-l-none md:rounded-r-2xl md:hover:ml-10">
+            </div>
+            <div class="p-4 mt-6 mb-2">
+                <span class="text-xs font-medium tracking-widest uppercase">About us</span>
+                <p>Our team is made up of enthusiastic
+                    students who are passionate about Internet of Things
+                    (IoT) technology and full-stack web development. Our project is an attempt to
+                    investigate
+                    the limitless possibilities of IoT and its applications in real-world scenarios, as
+                    well as its integration into web development.</p>
+            </div>
+        </div>
+        <p class="px-2 py-2">
+            The Industrial Space Management System is a cutting-edge solution for managing and
+            optimising industrial spaces. With the increasing demand for resource efficiency, our system
+            aims to provide sustainability and security to industrial spaces through remote
+            environmental monitoring and RFID-based access, It involves the use
+            of a wide range of hardware and software and technologies.These
+            include ESP32, ESP32CAM, BME280, MQ-Gas sensors, RFID, Micropython, Arduino C, HTML, CSS,
+            JavaScript, Chart.js, Flask, Python, and
+            PostgreSQL, Timescale-DB, among others.
+        </p>
+        <div class="grid gap-4 md:grid-cols-3">
+            <div class="flex flex-col items-center p-4 rounded-md shadow-md">
+                <div class="grid grid-cols-2">
+                    <img src="{{url_for('static', filename='images/micropython.svg')}}" alt=""
+                        class="object-cover object-center duration-500 h-72 hover:scale-110 rounded-2xl">
+                    <img src="{{url_for('static', filename='images/arduino.webp')}}" alt=""
+                        class="object-cover object-center duration-500 h-72 hover:scale-110 rounded-2xl">
+                </div>
+                <div class="p-4 mt-6 mb-2">
+                    <span class="text-xs font-medium tracking-widest uppercase">MICROCONTROLLER</span>
+                    <p>
+                        Arduino C and MicroPython are programming languages for microcontrollers and
+                        embedded systems, enabling development of projects involving sensors and devices
+                        in constrained environments.
+                    </p>
+                </div>
+            </div>
+            <div class="flex flex-col items-center p-4 rounded-md shadow-md">
+                <img src="{{url_for('static', filename='images/html_css_js.png')}}" alt=""
+                    class="object-cover object-center w-full duration-500 rounded-2xl h-72 hover:scale-110">
+                <div class="p-4 mt-6 mb-2">
+                    <span class="text-xs font-medium tracking-widest uppercase">Frontend</span>
+                    <p>
+                        HTML, CSS, and JavaScript are the primary technologies for creating the user
+                        interface and experience of a web application. HTML structures content, CSS
+                        handles styling and layout, and JavaScript adds interactivity and dynamic
+                        behavior.
+                    </p>
+                </div>
+            </div>
+            <div class="flex flex-col items-center p-4 rounded-md shadow-md">
+                <img src="{{url_for('static', filename='images/chartjs.svg')}}" alt=""
+                    class="object-cover object-center w-10/12 duration-500 h-72 hover:scale-110 rounded-2xl">
+                <div class="p-4 mt-6 mb-2">
+                    <span class="text-xs font-medium tracking-widest uppercase">Frontend</span>
+                    <p>
+                        Chart.js is a JavaScript library for creating various types of charts and
+                        visualizations. It is built on top of the HTML5 Canvas element, and it offers a
+                        simple and easy-to-use API for creating charts such as line charts, bar charts,
+                        pie charts, and
+                    </p>
+                </div>s
+            </div>
+            <div class="flex flex-col items-center p-4 rounded-md shadow-md">
+                <img src="{{url_for('static', filename='images/python.png')}}" alt=""
+                    class="object-cover object-center w-10/12 duration-500 h-72 hover:scale-110 rounded-2xl">
+                <div class="p-4 mt-6 mb-2">
+                    <span class="text-xs font-medium tracking-widest uppercase">Backend</span>
+                    <p>
+                        Python is a high-level programming language used for various purposes, including
+                        web development, data analysis, machine learning, and more.In the context of
+                        this project
+                        it can be used for server side scripting, data manipulation and other backend
+                        operations
+                    </p>
+                </div>
+            </div>
+            <div class="flex flex-col items-center p-4 rounded-md shadow-md">
+                <img src="{{url_for('static', filename='images/flask.svg')}}" alt=""
+                    class="object-cover object-center w-full duration-500 h-72 hover:scale-110 rounded-2xl">
+                <div class="p-4 mt-6 mb-2">
+                    <span class="text-xs font-medium tracking-widest uppercase">Backend</span>
+                    <p>
+                        Flask is a web application framework written in Python. It provides a set of
+                        tools and libraries for building web applications, such as routing, templating,
+                        and request handling. Flask is lightweight and flexible, making it a popular
+                        choice for building small to medium-sized web applications.
+                    </p>
+                </div>
+            </div>
+            <div class="flex flex-col items-center p-4 rounded-md shadow-md">
+                <img src="{{url_for('static', filename='images/postgresql.png')}}" alt=""
+                    class="object-cover object-center w-9/12 duration-500 h-72 hover:scale-110 rounded-2xl">
+                <div class="p-4 mt-6 mb-2">
+                    <span class="text-xs font-medium tracking-widest uppercase">Backend</span>
+                    <p>
+                        PostgreSQL is a powerful open-source relational database management system. It
+                        offers various features such as ACID compliance, support for complex queries and
+                        data types, and scalability. PostgreSQL is widely used in web applications for
+                        storing and managing data.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <p>
+            Overall the porject uses a diverse range of technologies that can be leveraged to build web
+            applications and hardware
+            projects. The use of these technologies provides an excellent opportunity to learn and gain
+            hands-on experience with real-world tools widely used in the industry. As we progress with
+            the project, we can explore more advanced features of each technology to build innovative
+            and impactful solutions.
+        </p>
+        <p>
+            We hope our project inspires you to learn more about IoT & Web Development and its potential
+            to shape our future.
+            <br>Thank you for visiting our website!
+        </p>
+    </article>
+</main>
 {% endblock %}
 {% block scripts %}
 <!-- JS Here -->

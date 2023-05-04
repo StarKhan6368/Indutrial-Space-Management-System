@@ -15,7 +15,6 @@ const DASH = {
           e.target.lastElementChild.id = "arrow-up"
         }
         DASH.latestPara.classList.toggle("hidden");
-        console.log(e.target.lastElementChild.id);
       })
       DASH.chartParaDrop.addEventListener("click", (e) => {
         if (e.target.lastElementChild.id === "arrow-up"){

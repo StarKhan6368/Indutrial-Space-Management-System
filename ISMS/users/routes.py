@@ -32,7 +32,7 @@ def signup():
                 db.session.add(new_user)
                 db.session.commit()
                 login_user(new_user)
-                redirect(url_for('main.index'))
+                return redirect(url_for('main.index'))
             elif not employee:
                 flash("Invalid Employee ID", "danger")
             else:
@@ -49,3 +49,10 @@ def logout():
 @users.route("/profile")
 def profile():
     return "HELLO"
+
+@users.route("/employees/<emp_id>")
+def get_employee(emp_id):
+    if not current_user.is_authenticated:
+        redirect(url_for('users.login'))
+    return render_template("employee.html", emp_id=emp_id)
+        
