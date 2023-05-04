@@ -13,14 +13,13 @@
         </div>
         <form action="" method="post"
             class="flex flex-col justify-center mt-5 space-y-2 md:mt-0 md:space-y-0 md:items-center md:space-x-5 md:flex-row">
-            {{ form.hidden_tag() }}
             <label class="flex flex-col">
                 <p class="pl-2 text-sm font-light">From:</p>
-                {{form.start_date(class="w-full rounded-md")}}
+                <input type="datetime-local" name="start_date" id="start_date">
             </label>
             <label class="flex flex-col">
                 <p class="pl-2 text-sm font-light">To:</p>
-                {{form.end_date(class="w-full rounded-md")}}
+                <input type="datetime-local" name="end_date" id="end_date">
             </label>
             <button type="submit"
                 class="px-10 py-3 text-white duration-500 translate-y-2 bg-blue-400 rounded-md hover:bg-blue-500 hover:scale-105">Get
@@ -28,21 +27,6 @@
             </button>
         </form>
     </header>
-    {% if form.errors %}
-    <ul class="container flex justify-center py-1 mx-auto" style="padding-left: 3px; padding-right: 3px;">
-        {% for error in form.errors %}
-        <div
-            class="flex justify-between w-full px-4 py-3 text-red-700 bg-red-100 border border-red-400 rounded items-center">
-            <li class="font-bold">{{ error }}</li>
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="hover:cursor-pointer" id="dismiss" style="width: 2rem; height: 2rem;">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                    d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-        </div>
-        {% endfor %}
-    </ul>
-    {% endif %}
     <!-- Guages -->
     <div class="flex items-center justify-between px-2 py-1 bg-blue-100 border-b-2 rounded-md shadow-lg hover:cursor-pointer shadow-gray-300"
         id="latest-parameters-dropdown">

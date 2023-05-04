@@ -1,0 +1,16 @@
+{% extends 'layout.html' %}
+{% block head %}
+<title>Clusters</title>
+{% endblock %}
+{% block main %}
+<main class="flex flex-col p-4 mb-auto space-y-6">
+    <div>
+        <h1 class="text-2xl font-semibold md:text-4xl">Select the cluster you wish to monitor</h1>
+        <p class="text-sm font-light">All cluster have a unique Cluster ID & Cluster Name</p>
+    </div>
+    <ul class="grid gap-4" id="cluster-list"></ul>
+</main>
+{% endblock %}
+{% block scripts %}
+<script src="{{url_for('static', filename='js/clusters.js')}}"></script>
+{% endblock %}
