@@ -10,7 +10,7 @@ class LoginForm(FlaskForm):
     
 class SignupForm(FlaskForm):
     email_id = StringField("Email Address", validators=[InputRequired(), Email(message="Invalid email address")])
-    emp_id = StringField("Enter Employee ID", validators=[InputRequired(), Length(min=16, max=16)])
+    emp_id = StringField("Enter Employee ID", validators=[InputRequired(), Length(min=8, max=8)])
     password = PasswordField("Enter Password", validators=[InputRequired(), Length(min=8), 
                 EqualTo("confirm_password", message="Passwords must match")])
     confirm_password = PasswordField("Confirm Password", validators=[InputRequired(), Length(min=8)])

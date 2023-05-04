@@ -5,19 +5,20 @@
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Signup Page</title>
-        <link rel="stylesheet" href="{{url_for('static', filename='css/signup.css')}}">
+        <title>Signup</title>
+        <link rel="stylesheet" href="{{url_for('static', filename='styles.css')}}">
     </head>
 
     <body class="bg-gray-100">
         {% with messages = get_flashed_messages() %}
         {% if messages %}
-        <ul class="container flex justify-center py-1 mx-auto" style="padding-left: 3px; padding-right: 3px;">
+        <ul class="container px-3 py-1 mx-auto">
             {% for message in messages %}
-            <div class=" flex justify-between w-full px-4 py-3 text-red-700 bg-red-100 border border-red-400 rounded">
+            <div
+                class="flex items-center justify-between w-full px-4 py-3 text-red-700 bg-red-100 border border-red-400 rounded">
                 <li class="font-bold">{{ message }}</li>
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                    stroke="currentColor" class="w-1 h-1 hover:cursor-pointer" id="dismiss">
+                    stroke="currentColor" class="w-7 h-7 hover:cursor-pointer" id="dismiss">
                     <path stroke-linecap="round" stroke-linejoin="round"
                         d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
@@ -28,62 +29,60 @@
         {% endwith %}
         <div class="container flex items-center justify-center min-h-screen mx-auto">
             <div class="hidden duration-500 hover:scale-105 lg:block">
-                <img src="{{url_for('static', filename='images/iot.png')}}" alt=""
-                    class="shadow-lg rounded-3xl shadow-teal-900">
+                <img src="{{url_for('static', filename='images/iot.png')}}" alt="" class=" shadow-lg rounded-3xl
+                    shadow-teal-900">
             </div>
-            <div class="p-5 space-y-5 md:p-0 md:pl-10">
-                <div class="flex items-center space-x-3">
-                    <div class="duration-200 scale-90 w-14 hover:animate-pulse hover:scale-100">
-                        <img src="{{url_for('static', filename='images/iot_logo.png')}}" alt="">
+            <div class="p-1 space-y-4 md:pl-8 md:p-0">
+                <div class="flex items-center space-x-1">
+                    <div class="duration-500 scale-90 w-14 hover:animate-pulse hover:scale-100">
+                        <img src="{{url_for('static', filename='images/iot_logo.png')}}" alt="" />
                     </div>
                     <h1 class="text-xl font-bold duration-500 hover:scale-x-105">Industrial Space Management System</h1>
                 </div>
-                <div class="space-y-3">
-                    <p class="text-lg font-medium">Sign up now and get access to monitoring services!</p>
-                    <form action="/signup" method="POST" class="grid gap-2">
-                        {{ form.hidden_tag() }}
+                <div class="space-y-4">
+                    <p class="text-lg">Sign up now and get access to monitoring services!</p>
+                    <form action="" method="POST" class="flex flex-col space-y-2">
+                        {{form.hidden_tag()}}
                         <label for="email" class="flex flex-col">
                             <span class="pl-2 text-sm font-light">Email</span>
                             {{ form.email_id(class="rounded-md", placeholder="JohnDoe@mail.com", type="email") }}
                         </label>
                         <label for="emp-id" class="flex flex-col">
                             <span class="pl-2 text-sm font-light">Employee ID</span>
-                            {{ form.emp_id(class="rounded-md", placeholder="XXXX-XXXX-XXXX-XXXX", id="emp-id") }}
+                            {{ form.emp_id(class="rounded-md", placeholder="XXXX-XXXX", id="emp-id") }}
                         </label>
-                        <div class="flex flex-col md:flex-row md:space-x-2">
+                        <div class="flex flex-col space-y-3 md:flex-row md:space-x-2 md:space-y-0">
                             <label for="password" class="flex flex-col">
                                 <span class="pl-2 text-sm font-light">Password</span>
                                 {{ form.password(class="rounded-md", placeholder="********", id="password") }}
                             </label>
-                            <div>
-                                <label for="login-password" class="flex flex-col">
-                                    <span class="pl-2 text-sm font-light">Confirm Password</span>
-                                    <div class="flex items-center">
-                                        {{ form.confirm_password(class="rounded-md w-11/12", placeholder="********", id="confirm-password") }}
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                            stroke-width="1.5" stroke="currentColor" class="w-1 h-1 pl-2"
-                                            id="show-pass">
-                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
-                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                        </svg>
-                                    </div>
-                                </label>
-                            </div>
+                            <label for="login-password" class="flex flex-col">
+                                <span class="pl-2 text-sm font-light">Confirm Password</span>
+                                <div class="flex items-center">
+                                    {{ form.confirm_password(class="w-full rounded-md", placeholder="********", id="confirm-password") }}
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                        stroke-width="1.5" stroke="currentColor" class="w-10 h-10 pl-2" id="show-pass">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    </svg>
+                                </div>
+                            </label>
                         </div>
                         {% if form.password.errors %}
                         {% for error in form.password.errors %}
                         <p class="font-bold pl-2 text-red-600">{{error}}</p>
                         {% endfor %}
                         {% endif %}
+                        <div></div>
                         <button type="submit"
-                            class="px-4 py-2 mt-1 font-bold text-white duration-500 bg-blue-500 rounded-md col-span-full hover:bg-blue-700 hover:scale-105">SignUp
+                            class="w-full py-2 font-bold text-white duration-500 bg-blue-500 rounded-md hover:bg-blue-700 hover:scale-110">
+                            Sign up
                         </button>
                     </form>
-                    <p class="mt-2 text-sm text-center">
-                        Already have an account ? <a href="{{url_for('users.login')}}" class="text-blue-700">Login
-                            Now</a>
+                    <p class="mt-1 text-sm text-center">Already have an account ?
+                        <a href="{{url_for('users.login')}}" class="text-blue-700">Login Now</a>
                     </p>
                 </div>
             </div>
