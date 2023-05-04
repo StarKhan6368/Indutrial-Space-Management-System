@@ -1,5 +1,6 @@
 const PLOTTER = {
-    latestAPI : "/api/latest",
+    clusterID: document.URL.split("/")[4],
+    latestAPI : "/api/latest/",
     thresholdAPI : "/api/thresholds",
     status : document.getElementById("status"),
     date_time : document.getElementById("date_time"),
@@ -33,15 +34,13 @@ const PLOTTER = {
         PLOTTER.colorChanger(PLOTTER.status, PLOTTER.status === "OFFLINE");
         }
     },
-    init () {
-        fetch(PLOTTER.thresholdAPI).then(response => response.json()).then(data => {
-            PLOTTER.thresholds = data;
-        })
+    async init () {
+        PLOTTER.thresholds = await fetch(PLOTTER.thresholdAPI).then(response => response.json()).then(data => {return data;})
         PLOTTER.parameterUpdater()
         // intervalId = setInterval(PLOTTER.parameterUpdater, 5000);
     },
     async parameterUpdater() {
-        await fetch(PLOTTER.latestAPI).then(response => response.json()).then(data => {
+        await fetch(PLOTTER.latestAPI+PLOTTER.clusterID).then(response => response.json()).then(data => {
             for (const param in data) {
                 PLOTTER[param].childNodes[0].textContent = data[param];            
             }
