@@ -1,6 +1,6 @@
 from ISMS.models import Sensor
 from paho.mqtt import client as mqtt_client
-from ISMS import app
+from ISMS import app, db
 import json
 
 BROKER = 'broker.emqx.io'
@@ -28,7 +28,12 @@ def subscribe(client: mqtt_client):
         payload = msg.payload.decode("utf-8")
         if "temp" in payload:
             data = json.loads(payload)
-            print(data)
+            with app.app_context():
+                readings = Sensor(date_time=data["date_time"], cluster_id = data["cluster_id"], temperature=float(data["temperature"][:-1]), humidity=float(data["humidity"][:-1]),
+                              pressure=float(data["pressure"][:-3]), lpg=data["lpg"], methane=data["methane"],smoke=data["smoke"],
+                              hydrogen=data["hydrogen"],ppm=data["ppm"], free_heap=data["free_heap"])
+                db.session.add(readings)
+                db.session.commit()
         else:
             print(payload)
 
@@ -39,3 +44,5 @@ def process_me():
     client = connect_mqtt()
     subscribe(client)
     client.loop_forever()
+    
+process_me()

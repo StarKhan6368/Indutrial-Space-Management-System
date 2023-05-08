@@ -1,4 +1,6 @@
-import json
+import json, datetime
+from sqlalchemy import desc
+from ISMS.api.utils import prettify_data
 from flask import Blueprint, redirect, render_template, url_for, request
 from ISMS.models import Sensor, Employee, Cluster
 from flask_login import current_user
@@ -32,25 +34,33 @@ def clusters():
     return json.dumps(data, default=str)
 
 
-@api.route("/api/latest/<cluster_id>")
+@api.route("/api/clusters/<cluster_id>/latest")
 def latest(cluster_id):
     if not current_user.is_authenticated:
         return redirect(url_for('users.login'))
-    data = Sensor.query.filter_by(cluster_id=cluster_id).first()
+    data = Sensor.query.filter_by(cluster_id=cluster_id).order_by(desc(Sensor.date_time)).first()
     return json.dumps(data.as_dict(), default=str)
 
 
-@api.route("/api/<cluster_id>", methods=["POST", "GET"])  # PENDING
+@api.route("/api/clusters/<cluster_id>", methods=["POST","GET"])
 def sensors(cluster_id):
     if not current_user.is_authenticated:
         return redirect(url_for('users.login'))
-    data = Sensor.query.filter_by(cluster_id=cluster_id).all()
-    return json.dumps(data, default=str)
+    # values = request.get_json() or []
+    values = {"from":"", "to":""}
+    if not values["from"] and not values['to']:
+        start_datetime = datetime.datetime.now(tz=datetime.timezone(datetime.timedelta(seconds=19800)))
+        end_datetime = start_datetime - datetime.timedelta(days=3)
+    else:
+        start_datetime = datetime.datetime.fromisoformat(values["from"])
+        end_datetime = datetime.datetime.fromisoformat(values["to"])
+    data = Sensor.query.filter(Sensor.date_time <= start_datetime).filter(Sensor.date_time >= end_datetime ).order_by(desc(Sensor.date_time)).all()
+    return prettify_data(data)
 
 
 @api.route("/api/thresholds")
 def threshold():
     return json.dumps({
-        "temperature": 40, "humidity": 40, "pressure": 40, "lpg": 40, "methane": 40,
-        "smoke": 40, "hydrogen": 40, "ppm": 40
+        "temperature": 40, "humidity": 60, "pressure": 1000, "lpg": 1000, "methane": 1000,
+        "smoke": 1000, "hydrogen": 1000, "ppm": 500, "free_heap":10240
     })
