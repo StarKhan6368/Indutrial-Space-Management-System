@@ -1,4 +1,5 @@
 from ISMS import db, login_manager
+from datetime import datetime, timezone, timedelta
 from flask_login import UserMixin
 
 @login_manager.user_loader
@@ -93,8 +94,10 @@ class Sensor(db.Model):
     hydrogen = db.Column(db.Numeric(10,2), nullable=False)
     ppm = db.Column(db.Numeric(10,2), nullable=False)
     
-    def __init__(self, cluster_id: int, temperature: float, humidity: float, pressure: float, lpg: float, methane: float, smoke: float, hydrogen: float, ppm: float) -> None:
+    def __init__(self, cluster_id: int, temperature: float, humidity: float, pressure: float, lpg: float, methane: float, smoke: float, hydrogen: float, ppm: float, free_heap:str, date_time) -> None:
+        self.date_time = datetime(*date_time[:-1], timezone(timedelta(hours=5, minutes=30)))
         self.cluster_id = cluster_id
+        self.free_heap = free_heap
         self.temperature = temperature
         self.humidity = humidity
         self.pressure = pressure
