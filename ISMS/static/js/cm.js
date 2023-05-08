@@ -54,7 +54,7 @@ function makeConfig(passed_canvas, labels, data, data_label, title) {
                     time: {
                         unit: "minute"
                     }
-                },
+                }
             },
             maintainAspectRatio: false
         }
@@ -63,7 +63,6 @@ function makeConfig(passed_canvas, labels, data, data_label, title) {
     config.data.datasets[0].data = data;
     config.data.datasets[0].label = data_label;
     config.options.title.text = title;
-    return config
 }
 
 const HUD = {
@@ -89,7 +88,7 @@ const GRAPHS = {
     data: {},
     temperatureCanvas : document.getElementById("temperature-canvas").getContext('2d'),
     humidityCanvas: document.getElementById("humidity-canvas").getContext('2d'),
-    pressureCanvas: document.getElementById("pressure-canvas").getContext('2d'),
+    pressureCanvas: document.getElementById("humidity-canvas").getContext('2d'),
     mq2LmCanvas: document.getElementById("mq2_lm-canvas").getContext('2d'),
     mq2HsCanvas: document.getElementById("mq2_hs-canvas").getContext('2d'),
     mq135Canvas : document.getElementById("mq135-canvas").getContext('2d'),
@@ -97,23 +96,20 @@ const GRAPHS = {
     humidityChart: null,
     pressureChart: null,
     init () {
-        console.log(GRAPHS.data);
-        GRAPHS.temperatureChart = new Chart(GRAPHS.temperatureCanvas, 
-            makeConfig(GRAPHS.temperatureCanvas,GRAPHS.data.date_time, GRAPHS.data.temperature, 
-                "Temperature", "Temperature"))
-        GRAPHS.humidityChart = new Chart(GRAPHS.humidityCanvas, makeConfig(GRAPHS.humidityCanvas, GRAPHS.data.date_time, GRAPHS.data.humidity, "Humidity", "Humidity"))
-        GRAPHS.pressureChart = new Chart(GRAPHS.pressureCanvas, makeConfig(GRAPHS.pressureCanvas, GRAPHS.data.date_time, GRAPHS.data.pressure, "Pressure", "Pressure"))
+        GRAPHS.temperatureChart = new Chart(GRAPHS.temperatureCanvas, makeConfig(GRAPHS.data.date_time, GRAPHS.data.temperature, "Temperature", "Temperature"))
+        GRAPHS.humidityChart = new Chart(GRAPHS.humidityCanvas, makeConfig(GRAPHS.data.date_time, GRAPHS.data.humidity, "Humidity", "Humidity"))
+        GRAPHS.pressureChart = new Chart(GRAPHS.pressureCanvas, makeConfig(GRAPHS.data.date_time, GRAPHS.data.pressure, "Pressure", "Pressure"))
         GRAPHS.fetchUpdates()
     },
     fetchUpdates(){
         setInterval(() => {
-            fetch(GRAPHS.latestAPI).then(response => response.json()).then(data => {
-                if (data["date_time"] !== GRAPHS.data["date_time"][0]) {
-                    for (const param in GRAPHS.data) {
-                        GRAPHS.data[param].unshift(data[param])
-                        GRAPHS.data[param].pop()    
+            fetch(GRAPH.latestAPI).then(response => response.json()).then(data => {
+                if (data["date_time"] !== GRAPH.data["date_time"][0]) {
+                    for (const param in GRAPH.data) {
+                        GRAPH.data[param].unshift(data[param])
                     }
                 }
+                
             }).then(GRAPHS.updateGraphs())}, 5000)
     },
     updateGraphs(){
@@ -123,8 +119,8 @@ const GRAPHS = {
     }
 }
 
-async function get_data() {
-    await fetch(GRAPHS.API_URL + GRAPHS.clusterID, {
+function get_data() {
+    fetch(GRAPHS.API_URL + GRAPHS.clusterID, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -136,11 +132,10 @@ async function get_data() {
     }).then(res => res.json()).then(data => {
         GRAPHS.data = data
     })
-    return null
 }
 
-document.addEventListener("DOMContentLoaded", async () => {
-    await get_data();
+document.addEventListener("DOMContentLoaded", () => {
+    get_data();
     HUD.addListeners();
     GRAPHS.init();
 })

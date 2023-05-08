@@ -100,17 +100,18 @@
         </svg>
     </div>
     <ul id="chart-parameters" class="grid gap-4 list-none md:grid-cols-2">
-        <div class="shadow-lg"><canvas height="300" id="temperature"></canvas></div>
-        <div class="shadow-lg"><canvas height="300" id="humidity"></canvas></div>
-        <div class="shadow-lg"><canvas height="300" id="pressure"></canvas></div>
-        <div class="shadow-lg"><canvas height="300" id="mq2_lm"></canvas></div>
-        <div class="shadow-lg"><canvas height="300" id="m12_hs"></canvas></div>
-        <div class="shadow-lg"><canvas height="300" id="mq135"></canvas></div>
+        <div class="shadow-lg"><canvas height="300" width="400" id="temperature-canvas"></canvas></div>
+        <div class="shadow-lg"><canvas height="300" width="400" id="humidity-canvas"></canvas></div>
+        <div class="shadow-lg"><canvas height="300" width="400" id="pressure-canvas"></canvas></div>
+        <div class="shadow-lg"><canvas height="300" width="400" id="mq2_lm-canvas"></canvas></div>
+        <div class="shadow-lg"><canvas height="300" width="400" id="mq2_hs-canvas"></canvas></div>
+        <div class="shadow-lg"><canvas height="300" width="400" id="mq135-canvas"></canvas></div>
     </ul>
 </main>
 {% endblock %}
 {% block scripts %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
 <script src="{{url_for('static', filename='js/dashboard.js')}}"></script>
 <script src="{{url_for('static', filename='js/ChartMaker.js')}}"></script>
 {% endblock %}
