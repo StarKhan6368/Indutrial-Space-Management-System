@@ -11,7 +11,6 @@ main = Blueprint("main", __name__)
 def index():
     if not current_user.is_authenticated:
         return redirect(url_for('users.login'))
-    print("HELLO", current_user)
     return render_template("index.html")
 
 
