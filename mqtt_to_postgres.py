@@ -1,13 +1,13 @@
-from ISMS.models import Sensor
+from ISMS.models import Sensor, Cluster
 from paho.mqtt import client as mqtt_client
 from ISMS import app, db
 import json
 
-BROKER = 'broker.emqx.io'
+BROKER = '192.168.0.123'
 PORT = 1883
-TOPIC = "test"
-USERNAME = "emqx"
-PASSWORD = "public"
+TOPIC = "esp32"
+USERNAME = "<mqtt_username>"
+PASSWORD = "<mqtt_password>"
 CLIENT_ID = "Flask-App"
 
 def connect_mqtt():
@@ -26,23 +26,31 @@ def connect_mqtt():
 def subscribe(client: mqtt_client):
     def on_message(client, userdata, msg):
         payload = msg.payload.decode("utf-8")
-        if "temp" in payload:
-            data = json.loads(payload)
+        data = json.loads(payload)
+        print(data)
+        if "temperature" in data:
             with app.app_context():
+                cluster = Cluster.query.filter_by(id=data["cluster_id"]).first()
+                cluster.status = "ONLINE"
                 readings = Sensor(date_time=data["date_time"], cluster_id = data["cluster_id"], temperature=float(data["temperature"][:-1]), humidity=float(data["humidity"][:-1]),
                               pressure=float(data["pressure"][:-3]), lpg=data["lpg"], methane=data["methane"],smoke=data["smoke"],
                               hydrogen=data["hydrogen"],ppm=data["ppm"], free_heap=data["free_heap"])
                 db.session.add(readings)
                 db.session.commit()
-        else:
-            print(payload)
+        elif "status" in data:
+            with app.app_context():
+                cluster = Cluster.query.filter_by(id=data["cluster_id"]).first()
+                cluster.status = data["status"]
+                db.session.commit()
+            
+            
 
     client.subscribe(TOPIC)
     client.on_message = on_message
 
-def process_me():
+def mqtt_start():
     client = connect_mqtt()
     subscribe(client)
     client.loop_forever()
     
-process_me()
+mqtt_start()

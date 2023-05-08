@@ -42,25 +42,25 @@ def latest(cluster_id):
     return json.dumps(data.as_dict(), default=str)
 
 
-@api.route("/api/clusters/<cluster_id>", methods=["POST","GET"])
+@api.route("/api/clusters/<cluster_id>", methods=["POST"])
 def sensors(cluster_id):
     if not current_user.is_authenticated:
         return redirect(url_for('users.login'))
-    # values = request.get_json() or []
-    values = {"from":"", "to":""}
+    values = request.get_json() or []
     if not values["from"] and not values['to']:
         start_datetime = datetime.datetime.now(tz=datetime.timezone(datetime.timedelta(seconds=19800)))
-        end_datetime = start_datetime - datetime.timedelta(days=3)
+        end_datetime = start_datetime - datetime.timedelta(days=1)
     else:
         start_datetime = datetime.datetime.fromisoformat(values["from"])
         end_datetime = datetime.datetime.fromisoformat(values["to"])
-    data = Sensor.query.filter(Sensor.date_time <= start_datetime).filter(Sensor.date_time >= end_datetime ).order_by(desc(Sensor.date_time)).all()
+    data = Sensor.query.filter(Sensor.date_time <= start_datetime).filter(Sensor.date_time >= end_datetime ).order_by(desc(Sensor.date_time))
+    data = data.limit(30).all() if not values['from'] else data.all()
     return prettify_data(data)
 
 
 @api.route("/api/thresholds")
 def threshold():
     return json.dumps({
-        "temperature": 40, "humidity": 60, "pressure": 1000, "lpg": 1000, "methane": 1000,
-        "smoke": 1000, "hydrogen": 1000, "ppm": 500, "free_heap":10240
+        "temperature": 40, "humidity": 60, "pressure": 1000, "lpg": 400, "methane": 400,
+        "smoke": 400, "hydrogen": 400, "ppm": 500, "free_heap":10240
     })

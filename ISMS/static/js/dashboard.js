@@ -31,14 +31,14 @@ const LATEST = {
           } else {
               LATEST.colorChanger(LATEST[param], false);
           }
-      LATEST.colorChanger(LATEST.status, LATEST.status === "OFFLINE");
+      LATEST.colorChanger(LATEST.status, LATEST.status.textContent === "OFFLINE");
       LATEST.colorChanger(LATEST.free_heap, LATEST.free_heap <= LATEST.thresholds["free_heap"]);
       }
   },
   async init () {
       LATEST.thresholds = await fetch(LATEST.thresholdAPI).then(response => response.json()).then(data => {return data;})
       LATEST.parameterUpdater()
-      // intervalId = setInterval(LATEST.parameterUpdater, 5000);
+      intervalId = setInterval(LATEST.parameterUpdater, 5000);
   },
   async parameterUpdater() {
       await fetch(LATEST.latestAPI.replace("CLUSTER_ID", LATEST.clusterID)).then(response => response.json()).then(data => {
