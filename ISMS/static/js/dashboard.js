@@ -33,6 +33,7 @@ const LATEST = {
           }
       LATEST.colorChanger(LATEST.status, LATEST.status.textContent === "OFFLINE");
       LATEST.colorChanger(LATEST.free_heap, LATEST.free_heap <= LATEST.thresholds["free_heap"]);
+      LATEST.date_time.textContent = new Date(LATEST.date_time.textContent);
       }
   },
   async init () {
