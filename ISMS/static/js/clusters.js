@@ -24,7 +24,7 @@ const CLUS = {
                 </div>
             </div>
             <a href="/dashboard/${cluster.id}"
-                class="py-2 font-bold text-white duration-500 bg-${color}-500 rounded-md md:py-3 md:px-12 hover:bg-${color}-700 hover:scale-105">Go
+                class="text-center py-2 font-bold text-white duration-500 bg-${color}-500 rounded-md md:py-3 md:px-12 hover:bg-${color}-700 hover:scale-105">Go
                 to Cluster</a>
             </li>`
             CLUS.clusterList.innerHTML += htmlData;
