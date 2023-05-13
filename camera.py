@@ -29,14 +29,15 @@ class Camera:
         self.flash(0)
         return self.face_compare(known_encodings)
     
-    
 if __name__ == "__main__":
     import numpy as np
-    camera = Camera("http://192.168.0.108")
+    camera = Camera("http://192.168.0.123")
+    camera.flash(50)
     camera.capture()
+    camera.flash(0)
     image = face_recognition.load_image_file("image.jpg")
     encoded_image = face_recognition.face_encodings(image)
     print(encoded_image)
-    if encoded_image:
+    if encoded_image and input() in ["yes", "y", "Y"]:
         with open("enc.txt", "w") as file:
             file.write(np.array2string(encoded_image[0], separator=",", max_line_width=float("inf")))
