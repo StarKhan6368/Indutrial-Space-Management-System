@@ -1,12 +1,12 @@
 {% extends 'layout.html' %}
 {% block head %}
-<title>Employees</title>
+<title>Confirm Registrations</title>
 {% endblock %}
 {% block main %}
 <main class="flex flex-col p-4 mb-auto space-y-6">
     <div class="flex flex-col justify-between md:flex-row space-y-2 md:space-y-0">
         <div>
-            <h1 class="text-2xl font-semibold md:text-4xl">Select an Employee</h1>
+            <h1 class="text-2xl font-semibold md:text-4xl">Confirm User Registration</h1>
             <p class="text-sm font-light">All employees have a unique Employee ID</p>
         </div>
         <div class="flex flex-col">
@@ -18,5 +18,5 @@
 </main>
 {% endblock %}
 {% block scripts %}
-<script src="{{url_for('static', filename='js/employees.js')}}"></script>
+<script src="{{url_for('static', filename='js/confirm_user.js')}}"></script>
 {% endblock %}

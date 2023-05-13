@@ -2,7 +2,7 @@ const EMPS = {
     empList : document.getElementById("emp-list"),
     EMPLOYEESAPI : "/api/employees",
     data:[],
-    values: ["emp_id", "first_name", "last_name", "status"],
+    values: ["emp_id", "first_name", "last_name"],
     empSearch : document.getElementById("emp-search"),
     async init(){
         await EMPS.getEMPS()
@@ -17,7 +17,7 @@ const EMPS = {
     populateEmps(data){
         EMPS.empList.innerHTML = "";
         data.forEach(employee => {
-            color = employee.status == "Active" ? "green" : "red";
+            color = employee.status == "ONLINE" ? "green" : "red";
             empCard = `<li
             class="flex flex-col justify-between p-3 space-y-3 duration-500 bg-blue-100 border-2 shadow-lg md:items-center md:flex-row rounded-xl md:space-y-0">
             <div class="flex flex-col font-semibold md:text-lg md:flex-row md:space-x-20">
@@ -33,7 +33,7 @@ const EMPS = {
                 </div>
             </div>
             <a href="/employees/${employee.emp_id}"
-                class="py-2 font-bold text-white duration-500 bg-${color}-500 rounded-md md:py-3 md:px-12 hover:bg-${color}-700 hover:scale-105">Go
+                class="text-center py-2 font-bold text-white duration-500 bg-${color}-500 rounded-md md:py-3 md:px-12 hover:bg-${color}-700 hover:scale-105">Go
                 to employee</a>
             </li>`
             EMPS.empList.innerHTML += empCard;
