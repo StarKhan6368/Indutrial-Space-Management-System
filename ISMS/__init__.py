@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_bcrypt import Bcrypt
@@ -9,6 +9,14 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://<username>:<password>@loca
 db = SQLAlchemy(app)
 login_manager = LoginManager(app)
 bcrypt = Bcrypt(app)
+
+@app.errorhandler(403)
+def unauthorized(e):
+    return render_template("403.html"), 403
+
+@app.errorhandler(404)
+def unauthorized(e):
+    return render_template("404.html"), 404
 
 from ISMS.users.routes import users
 from ISMS.main.routes import main
