@@ -37,17 +37,20 @@ const LATEST = {
       }
   },
   async init () {
+      LATEST.cluster_id.textContent = LATEST.clusterID;
       LATEST.thresholds = await fetch(LATEST.thresholdAPI).then(response => response.json()).then(data => {return data;})
       LATEST.parameterUpdater()
       intervalId = setInterval(LATEST.parameterUpdater, 5000);
   },
   async parameterUpdater() {
       await fetch(LATEST.latestAPI.replace("CLUSTER_ID", LATEST.clusterID)).then(response => response.json()).then(data => {
-          for (const param in data) {
+          if (data.length !== 0) {
+            for (const param in data) {
               LATEST[param].childNodes[0].textContent = data[param];            
+            }
+            return LATEST.colorCoder()
           }
       })
-      return LATEST.colorCoder()
   }
 }
 

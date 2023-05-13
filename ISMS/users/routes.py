@@ -11,9 +11,13 @@ def login():
         login_form = LoginForm()
         if login_form.validate_on_submit():
             check_user = User.query.filter_by(email_id=login_form.email_id.data).first()
-            if check_user and bcrypt.check_password_hash(check_user.password, login_form.password.data):
+            if check_user and bcrypt.check_password_hash(check_user.password, login_form.password.data) and check_user.status != "PENDING":
                 login_user(check_user, remember=login_form.remember_me.data)
+                current_user.status = "ONLINE"
+                db.session.commit()
                 return redirect(url_for('main.index'))
+            elif check_user.status == "PENDING":
+                flash("Account is not activated, Await Admin Confirmation", "warning")
             else:
                 flash("Invalid email or password", "danger")
         return render_template("login.html", form=login_form)
@@ -25,14 +29,13 @@ def signup():
         signup_form = SignupForm()
         if signup_form.validate_on_submit():
             user = User.query.filter_by(email_id=signup_form.email_id.data).first()
-            employee = Employee.query.filter_by(emp_id=signup_form.emp_id.data).first()
+            employee = Employee.query.filter_by(emp_id=signup_form.emp_id.data.lower()).first()
             if not user and employee:
                 hashed_password = bcrypt.generate_password_hash(signup_form.password.data).decode("utf-8")
-                new_user = User(emp_id=signup_form.emp_id.data, email_id=signup_form.email_id.data, password=hashed_password)
+                new_user = User(emp_id=signup_form.emp_id.data.lower(), email_id=signup_form.email_id.data, password=hashed_password, status="PENDING", is_admin=False)
                 db.session.add(new_user)
                 db.session.commit()
-                login_user(new_user)
-                return redirect(url_for('main.index'))
+                return redirect(url_for('users.login'))
             elif not employee:
                 flash("Invalid Employee ID", "danger")
             else:
@@ -43,16 +46,12 @@ def signup():
 @users.route("/logout")
 def logout():
     if current_user.is_authenticated:
+        current_user.status = "OFFLINE"
+        db.session.commit()
         logout_user()
     return redirect(url_for('users.login'))
 
 @users.route("/profile")
 def profile():
     return "HELLO"
-
-@users.route("/employees/<emp_id>")
-def get_employee(emp_id):
-    if not current_user.is_authenticated:
-        redirect(url_for('users.login'))
-    return render_template("employee.html", emp_id=emp_id)
         

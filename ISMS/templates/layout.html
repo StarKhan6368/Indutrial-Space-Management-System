@@ -32,7 +32,7 @@
           </li>
           <li class="flex items-center justify-center">
             <div class="flex items-center justify-center w-10 h-10 rounded-md group hover:bg-white" id="dashboard">
-              <a href="{{url_for('main.dashboard')}}">
+              <a href="{{url_for('main.clusters')}}">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                   stroke="currentColor" class="w-6 h-6 stroke-white group-hover:stroke-gray-800">
                   <path stroke-linecap="round" stroke-linejoin="round"
@@ -41,6 +41,7 @@
               </a>
             </div>
           </li>
+          {% if current_user.is_admin %}
           <li class="flex items-center justify-center">
             <div class="flex items-center justify-center w-10 h-10 rounded-md group hover:bg-white" id="employees">
               <a href="{{url_for('main.users')}}">
@@ -53,8 +54,8 @@
             </div>
           </li>
           <li class="flex items-center justify-center">
-            <div class="flex items-center justify-center w-10 h-10 rounded-md group hover:bg-white" id="users">
-              <a href="{{url_for('main.users')}}">
+            <div class="flex items-center justify-center w-10 h-10 rounded-md group hover:bg-white" id="confirm_user">
+              <a href="{{url_for('main.confirm_user')}}">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                   stroke="currentColor" class="w-6 h-6 stroke-white group-hover:stroke-gray-800">
                   <path stroke-linecap="round" stroke-linejoin="round"
@@ -63,7 +64,9 @@
               </a>
             </div>
           </li>
+          {% endif %}  
         </ul>
+        {% if current_user.is_admin %}
         <div class="flex flex-col items-center justify-around h-16 md:h-20">
           <div class="w-10/12 border border-slate-500"></div>
           <div class="flex items-center justify-center w-10 h-10 rounded-md group hover:bg-white" id="settings">
@@ -76,6 +79,7 @@
             </a>
           </div>
         </div>
+        {% endif %}
       </nav>
       <div class="flex flex-col justify-between w-full min-h-screen">
         <header
@@ -88,8 +92,8 @@
               <img src="{{url_for('static', filename='images/avatar.jpg')}}" alt=""
                 class="w-8 h-8 duration-500 rounded-full md:w-10 md:h-10 hover:scale-125 hover:mr-2">
               <div class="flex flex-col items-center justify-center">
-                <p class="text-sm font-bold"><user_name></p>
-                <p class="text-xs font-light">CEO</p>
+                <p class="text-sm font-bold">{{current_user.employee.first_name + " " + current_user.employee.last_name}}</p>
+                <p class="text-xs font-light">{{current_user.employee.position}}</p>
               </div>
               <div class="flex flex-col items-center pr-4">
                 <a href="{{url_for('users.logout')}}">

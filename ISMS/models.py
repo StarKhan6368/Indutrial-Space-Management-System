@@ -12,18 +12,33 @@ class User(db.Model, UserMixin):
     email_id = db.Column(db.String(40), unique=True, nullable=False)
     password = db.Column(db.String(60), nullable=False)
     acc_created = db.Column(db.DateTime, nullable=False, default=db.func.current_timestamp())
+    status = db.Column(db.String(10),  nullable=False)
+    is_admin = db.Column(db.Boolean(), nullable=False, default=False)
     employee = db.relationship("Employee", back_populates="user", uselist=False)
     
-    def __init__(self, emp_id: str, email_id: str, password: str) -> None:
+    def __init__(self, emp_id: str, email_id: str, password: str, status: str, is_admin: bool) -> None:
         self.emp_id = emp_id
         self.email_id = email_id
         self.password = password
+        self.status = status
+        self.is_admin = is_admin
         
     def get_id(self):
         return (self.emp_id)
         
     def __repr__(self):
-        return f"User('{self.emp_id}', '{self.email_id}', '{self.password}')"
+        return f"User('{self.emp_id}', '{self.email_id}', '{self.password}', '{self.status}', '{self.is_admin}')"
+    
+    def as_dict(self, values):
+        values = values or self.__table__.columns.keys()
+        try:
+            values.remove("password")
+        except ValueError:
+            pass
+        user_data = {attr : getattr(self, attr) for attr in values}
+        user_data.update({"first_name":self.employee.first_name ,"last_name": self.employee.last_name, "position": self.employee.position})
+        return user_data
+
     
 class Employee(db.Model):
     __tablename__ = "employees"
@@ -36,10 +51,9 @@ class Employee(db.Model):
     phone_number = db.Column(db.String(10), nullable=True)
     address = db.Column(db.Text, nullable=True)
     position = db.Column(db.String(10), nullable=False)
-    status = db.Column(db.String(10),  nullable=False)
     user = db.relationship('User', back_populates='employee', uselist=False)
     
-    def __init__(self, emp_id: str, first_name: str, last_name: str, gender: str, date_of_birth: str, enc_photo: str, phone_number: str, address: str, position:str, status: str):
+    def __init__(self, emp_id: str, first_name: str, last_name: str, gender: str, date_of_birth: str, enc_photo: str, phone_number: str, address: str, position:str):
         self.emp_id = emp_id
         self.first_name = first_name
         self.last_name = last_name
@@ -49,15 +63,15 @@ class Employee(db.Model):
         self.phone_number = phone_number
         self.address = address
         self.position = position
-        self.status = status
         
     def __repr__(self):
-        return f"Employee('{self.emp_id}', '{self.first_name}', '{self.last_name}', '{self.gender}', '{self.date_of_birth}', '{self.enc_photo}', '{self.phone_number}', '{self.address}, {self.status}')"
+        return f"Employee('{self.emp_id}', '{self.first_name}', '{self.last_name}', '{self.gender}', '{self.date_of_birth}', '{self.enc_photo}', '{self.phone_number}', '{self.address}', '{self.position}')"
     
     def as_dict(self, values):
         values = values or self.__table__.columns.keys()
         employee_data = {attr : getattr(self, attr) for attr in values}
-        employee_data.update({"email" : self.user.email_id, "acc_created": self.user.acc_created})
+        if self.user:
+            employee_data.update({"email" : self.user.email_id, "acc_created": self.user.acc_created, "status":self.user.status})
         return employee_data
 
 class Cluster(db.Model):
@@ -66,18 +80,23 @@ class Cluster(db.Model):
     name = db.Column(db.String(20), nullable=False)
     location = db.Column(db.Text, nullable=False)
     status = db.Column(db.String(10), nullable=False)
+    camera = db.Column(db.String(20), nullable=True)
+    camera_status = db.Column(db.String(10), nullable=True)
     sensors = db.relationship('Sensor', backref='cluster')
     
-    def __init__(self, name: str, location: str, status: str):
+    def __init__(self, name: str, location: str, status: str, camera: str = None , camera_status: str = None):
         self.name = name
         self.location = location
         self.status = status
+        self.camera = camera
+        self.camera_status = camera_status
         
     def __repr__(self) -> str:
-        return f"Cluster('{self.id}, {self.name}', '{self.location}', {self.status})"
+        return f"Cluster('{self.id}, {self.name}', '{self.location}', '{self.status}', '{self.camera}', '{self.camera_status}')"
     
     def as_dict(self, values):
-        cluster_data = {attr: getattr(self, attr) for attr in self.__table__.columns.keys()}
+        values = values or self.__table__.columns.keys()
+        cluster_data = {attr: getattr(self, attr) for attr in values}
         return cluster_data
     
 class Sensor(db.Model):
