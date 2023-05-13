@@ -76,8 +76,10 @@ def sensors(cluster_id):
     else:
         start_datetime = datetime.datetime.fromisoformat(values["from"])
         end_datetime = datetime.datetime.fromisoformat(values["to"])
-    data = Sensor.query.filter(Sensor.date_time <= start_datetime).filter(Sensor.date_time >= end_datetime ).order_by(desc(Sensor.date_time))
+        print(start_datetime, end_datetime)
+    data = Sensor.query.filter(Sensor.date_time >= start_datetime).filter(Sensor.date_time <= end_datetime ).order_by(desc(Sensor.date_time))
     data = data.limit(30).all() if not values['from'] else data.all()
+    print(data)
     return prettify_data(data)
 
 

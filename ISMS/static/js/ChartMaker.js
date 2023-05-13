@@ -11,8 +11,8 @@ function makeConfig(passed_canvas, labels, data, data_label, title) {
         data: {
             labels,
             datasets: [{
-                label: null, // Need to Chane
-                data: null, // Need to Chane
+                label: null, 
+                data: null, 
                 fill: true,
                 backgroundColor: gradient,
                 pointBackgroundColor: "#64748b",
@@ -22,7 +22,7 @@ function makeConfig(passed_canvas, labels, data, data_label, title) {
         options: {
             title:{
                 display: true,
-                text: null, // Need to Chane
+                text: null,
                 fontSize: 25
             },
             legend:{
@@ -88,10 +88,14 @@ const HUD = {
         HUD.submitBtn.addEventListener("click", (e) => {
             e.preventDefault()
             if (HUD.fromDateTime.value === "" || HUD.toDateTime.value === "") {
-                alert("Please select a date range")
-                return
+                alert("Empty Values, Defaulting to initial range")
+                get_data()
+                GRAPHS.customMode = false
+            } else{
+                GRAPHS.customMode = true
+                get_data(HUD.fromDateTime.value, HUD.toDateTime.value)
+                GRAPHS.updateGraphs()
             }
-            GRAPHS.data = GRAPHS.getData(HUD.fromDateTime.value, HUD.toDateTime.value)
         });
     }
 }
@@ -100,7 +104,7 @@ const GRAPHS = {
     API_URL : "/api/clusters/",
     clusterID: document.URL.split("/")[4],
     latestAPI : `/api/clusters/${document.URL.split("/")[4]}/latest`,
-    data: {},
+    data: {date_time: [], temperature: [], humidity: [], pressure: [], lpg: [], methane: [], hydrogen: [], smoke: [], ppm: []},
     temperatureCanvas : document.getElementById("temperature-canvas").getContext('2d'),
     humidityCanvas: document.getElementById("humidity-canvas").getContext('2d'),
     pressureCanvas: document.getElementById("pressure-canvas").getContext('2d'),
@@ -113,6 +117,7 @@ const GRAPHS = {
     mq2HsChart: null,
     mq2LmChart: null,
     mq135Chart: null,
+    customMode: false,
     init () {
         GRAPHS.temperatureChart = new Chart(GRAPHS.temperatureCanvas, makeConfig(GRAPHS.temperatureCanvas,GRAPHS.data.date_time, GRAPHS.data.temperature, "Temperature", "Temperature"))
         GRAPHS.humidityChart = new Chart(GRAPHS.humidityCanvas, makeConfig(GRAPHS.humidityCanvas, GRAPHS.data.date_time, GRAPHS.data.humidity, "Humidity", "Humidity"))
@@ -120,27 +125,29 @@ const GRAPHS = {
         GRAPHS.mq2HsChart = new Chart(GRAPHS.mq2HsCanvas, makeConfig(GRAPHS.mq2HsCanvas, GRAPHS.data.date_time, [GRAPHS.data.hydrogen, GRAPHS.data.smoke], ["Hydrogen", "Smoke"], "MQ2_HS"))
         GRAPHS.mq2LmChart = new Chart(GRAPHS.mq2LmCanvas, makeConfig(GRAPHS.mq2LmCanvas, GRAPHS.data.date_time, [GRAPHS.data.lpg, GRAPHS.data.methane], ["Lpg", "Methane"], "MQ2_LM"))
         GRAPHS.mq135Chart = new Chart(GRAPHS.mq135Canvas, makeConfig(GRAPHS.mq135Canvas, GRAPHS.data.date_time, GRAPHS.data.ppm, "MQ135 Air Quality", "MQ135"))
-        GRAPHS.fetchUpdates()
     },
-    fetchUpdates(){
-        setInterval(() => {
-            fetch(GRAPHS.latestAPI).then(response => response.json()).then(data => {
-                if (data["date_time"] !== GRAPHS.data["date_time"][0]) {
-                    for (const param in GRAPHS.data) {
-                        GRAPHS.data[param].unshift(data[param])
-                        GRAPHS.data[param].pop()    
-                    }
-                }
-            }).then(GRAPHS.updateGraphs())}, 5000)
+    fetchUpdates(data){
+        // if (new Date(data["date_time"]) > new Date(GRAPHS.data["date_time"][0]) && GRAPHS.customMode === false) {
+        //     for (const param in GRAPHS.data) {
+        //         GRAPHS.data[param].unshift(data[param])
+        //         if (GRAPHS.data.temperature.length < 30) {
+        //             GRAPHS.data[param].pop()
+        //         }
+        //     }
+        //     GRAPHS.updateGraphs()
+        // }
     },
     updateGraphs(){
         GRAPHS.temperatureChart.update()
         GRAPHS.humidityChart.update()
         GRAPHS.pressureChart.update()
+        GRAPHS.mq2HsChart.update()
+        GRAPHS.mq2LmChart.update()
+        GRAPHS.mq135Chart.update()
     }
 }
 
-async function get_data() {
+async function get_data(from="", to="") {
     await fetch(GRAPHS.API_URL + GRAPHS.clusterID, {
         method: "POST",
         headers: {
@@ -148,12 +155,19 @@ async function get_data() {
             "Accept": "application/json"
         },
         body:JSON.stringify({
-            from:"", to: ""
+            from, to
         })
     }).then(res => res.json()).then(data => {
-        GRAPHS.data = data
+        if (from && to){
+            console.log(data["temperature"]);
+            GRAPHS.temperatureChart.data.datasets[0].data = data["temperature"]
+            GRAPHS.temperatureChart.data.labels = data["date_time"]
+            GRAPHS.temperatureChart.update()
+        } else {
+            GRAPHS.data = data
+        }
+        console.log(GRAPHS.data);
     })
-    return null
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
