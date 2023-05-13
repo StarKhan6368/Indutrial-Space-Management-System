@@ -66,8 +66,8 @@ def cam_subscribe(client: mqtt_client):
 def mqtt_start():
     print("Connecting to MQTT Server")
     client = connect_mqtt()
-    # env_subscribe(client)
-    cam_subscribe(client)
+    env_subscribe(client)
+    # cam_subscribe(client)
     client.loop_forever()
     
 if __name__ == "__main__":

@@ -48,6 +48,7 @@ const LATEST = {
             for (const param in data) {
               LATEST[param].childNodes[0].textContent = data[param];            
             }
+            GRAPHS.fetchUpdates(data);
             return LATEST.colorCoder()
           }
       })
