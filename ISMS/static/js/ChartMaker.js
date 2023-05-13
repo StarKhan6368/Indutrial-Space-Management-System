@@ -59,9 +59,23 @@ function makeConfig(passed_canvas, labels, data, data_label, title) {
             maintainAspectRatio: false
         }
     }
-    config.labels = labels;
-    config.data.datasets[0].data = data;
-    config.data.datasets[0].label = data_label;
+    if (Array.isArray(data[0])) {
+        config.data.datasets = []
+        data.forEach((dataset, index) => {
+            config.data.datasets.push({
+                label: data_label[index],
+                data: dataset,
+                fill: true,
+                backgroundColor: gradient,
+                pointBackgroundColor: "#64748b",
+                tension: 0.5
+            })
+        })
+    } else {
+        config.data.datasets[0].data = data;
+        config.data.datasets[0].label = data_label;
+    }
+    config.data.labels = labels;
     config.options.title.text = title;
     return config
 }
@@ -96,13 +110,16 @@ const GRAPHS = {
     temperatureChart: null,
     humidityChart: null,
     pressureChart: null,
+    mq2HsChart: null,
+    mq2LmChart: null,
+    mq135Chart: null,
     init () {
-        console.log(GRAPHS.data);
-        GRAPHS.temperatureChart = new Chart(GRAPHS.temperatureCanvas, 
-            makeConfig(GRAPHS.temperatureCanvas,GRAPHS.data.date_time, GRAPHS.data.temperature, 
-                "Temperature", "Temperature"))
+        GRAPHS.temperatureChart = new Chart(GRAPHS.temperatureCanvas, makeConfig(GRAPHS.temperatureCanvas,GRAPHS.data.date_time, GRAPHS.data.temperature, "Temperature", "Temperature"))
         GRAPHS.humidityChart = new Chart(GRAPHS.humidityCanvas, makeConfig(GRAPHS.humidityCanvas, GRAPHS.data.date_time, GRAPHS.data.humidity, "Humidity", "Humidity"))
         GRAPHS.pressureChart = new Chart(GRAPHS.pressureCanvas, makeConfig(GRAPHS.pressureCanvas, GRAPHS.data.date_time, GRAPHS.data.pressure, "Pressure", "Pressure"))
+        GRAPHS.mq2HsChart = new Chart(GRAPHS.mq2HsCanvas, makeConfig(GRAPHS.mq2HsCanvas, GRAPHS.data.date_time, [GRAPHS.data.hydrogen, GRAPHS.data.smoke], ["Hydrogen", "Smoke"], "MQ2_HS"))
+        GRAPHS.mq2LmChart = new Chart(GRAPHS.mq2LmCanvas, makeConfig(GRAPHS.mq2LmCanvas, GRAPHS.data.date_time, [GRAPHS.data.lpg, GRAPHS.data.methane], ["Lpg", "Methane"], "MQ2_LM"))
+        GRAPHS.mq135Chart = new Chart(GRAPHS.mq135Canvas, makeConfig(GRAPHS.mq135Canvas, GRAPHS.data.date_time, GRAPHS.data.ppm, "MQ135 Air Quality", "MQ135"))
         GRAPHS.fetchUpdates()
     },
     fetchUpdates(){
