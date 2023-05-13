@@ -1,20 +1,22 @@
-import face_recognition, requests
+import face_recognition, requests, datetime
 from urllib.request import urlretrieve
+from numpy import fromstring
 
 class Camera:
     
     def __init__(self, url):
         self.url = url
-        self.image_file = "image.jpg"
     
-    def capture(self):
-        urlretrieve(f"{self.url}/capture", "image.jpg")
+    def capture(self, filename=None):
+        filename = filename or  f"face_recon/{datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
+        filename, headers = urlretrieve(f"{self.url}/capture", f"{filename}.jpg")
+        return filename
         
     def flash(self, intensity):
         requests.get(f"{self.url}/control?var=lamp&val={intensity}")
         
-    def face_compare(self, known_encodings):
-        image = face_recognition.load_image_file(self.image_file)
+    def face_compare(self, known_encodings, filename):
+        image = face_recognition.load_image_file(filename)
         encoded_image = face_recognition.face_encodings(image)
         if encoded_image:
             for faces in encoded_image:
@@ -25,19 +27,30 @@ class Camera:
         
     def recognize(self, known_encodings, intensity=50):
         self.flash(intensity)
-        self.capture()
+        filename = self.capture()
         self.flash(0)
-        return self.face_compare(known_encodings)
+        known_encodings = fromstring(known_encodings, sep=",", dtype=float)
+        return self.face_compare([known_encodings], filename)
     
 if __name__ == "__main__":
     import numpy as np
+    import os
     camera = Camera("http://192.168.0.123")
-    camera.flash(50)
-    camera.capture()
-    camera.flash(0)
-    image = face_recognition.load_image_file("image.jpg")
-    encoded_image = face_recognition.face_encodings(image)
-    print(encoded_image)
-    if encoded_image and input() in ["yes", "y", "Y"]:
-        with open("enc.txt", "w") as file:
-            file.write(np.array2string(encoded_image[0], separator=",", max_line_width=float("inf")))
+    done = False
+    while not done:
+        camera.flash(50)
+        filename = camera.capture(filename="test")
+        camera.flash(0)
+        image = face_recognition.load_image_file(filename)
+        encoded_image = face_recognition.face_encodings(image)
+        resp = input("Confirm this image (Y, y, Yes, yes): ").lower()
+        if encoded_image and resp in ["yes", "y"]:
+            with open("enc.txt", "w") as file:
+                file.write(np.array2string(encoded_image[0], separator=",", max_line_width=float("inf")))
+            done = True
+        elif resp in ["yes", "y"] and not encoded_image:
+            print("No face detected")
+            os.remove("test.jpg")
+        else:
+            print("Picture discarded due to user demand")
+            os.remove("test.jpg")

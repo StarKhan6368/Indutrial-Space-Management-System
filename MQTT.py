@@ -2,14 +2,14 @@ from ISMS.models import Sensor, Cluster, Employee
 from paho.mqtt import client as mqtt_client
 from ISMS import app, db
 from camera import Camera
-import json
+import json, datetime
 
-BROKER = '192.168.0.104'
-CAM_API = "http://1291.168.0.123"
+BROKER = '192.168.0.111'
+CAM_API = "http://192.168.0.123"
 PORT = 1883
 ESP_ENV_TOPIC = "ENV_DATA"
 ESP_CAM_TOPIC = "RFID_DATA"
-FACE_RECON_TOPIC = "FACE_RECON"
+FACE_RECON_TOPIC = "FACE_DATA"
 USERNAME = "<mqtt_username>"
 PASSWORD = "<mqtt_password>"
 CLIENT_ID = "Flask-App"
@@ -58,16 +58,17 @@ def cam_subscribe(client: mqtt_client):
         if "rfid_detected" in data:
             with app.app_context():
                 employee = Employee.query.filter_by(emp_id = data["rfid"]).first()
-                if employee:
-                    print(employee)
+            result = "GRANTED" if camera.recognize(employee.enc_photo, intensity=50) else "DENIED "
+            client.publish(FACE_RECON_TOPIC,json.dumps({"Access":result, "date_time":datetime.datetime.now()}, default=str))
     client.subscribe(ESP_CAM_TOPIC)
     client.on_message = on_message
 
 def mqtt_start():
     print("Connecting to MQTT Server")
     client = connect_mqtt()
-    env_subscribe(client)
+    # env_subscribe(client)
     cam_subscribe(client)
     client.loop_forever()
     
-mqtt_start()
+if __name__ == "__main__":
+    mqtt_start()
