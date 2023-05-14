@@ -31,7 +31,9 @@ const CLUS = {
             <a href="/clusters/${cluster.id}"
                 class="text-center py-2 font-bold text-white duration-500 bg-${cluster_color}-500 rounded-md md:py-3 md:px-12 hover:bg-${cluster_color}-700 hover:scale-105">Go
                 to Cluster</a>
-            ${CLUS.isAdmin ? `<a href="http://${cluster.camera}" class="text-center py-2 font-bold text-white duration-500 bg-${camera_color}-500 rounded-md md:py-3 md:px-12 hover:bg-${camera_color}-700 hover:scale-105">Go to Camera</a>` : ""}
+            ${CLUS.isAdmin ? `<a href="${cluster.camera_status === "ONLINE" ? `http://${cluster.camera}`: '#'}" 
+                class="text-center py-2 font-bold text-white duration-500 bg-${camera_color}-500 rounded-md md:py-3 md:px-12 hover:bg-${camera_color}-700 hover:scale-105"
+                disabled>Go to Camera</a>` : ""}
             </div>
             </li>`
             CLUS.clusterList.innerHTML += htmlData;
