@@ -23,9 +23,9 @@ def clusters():
 
 @main.route("/clusters/<cluster_id>")
 def cluster(cluster_id):
-    if current_user.is_authenticated:
-        return render_template("dashboard.html")
-    return redirect(url_for('users.login'))
+    if not current_user.is_authenticated:
+        return redirect(url_for('users.login'))
+    return render_template("dashboard.html")
 
 
 @main.route("/employees")

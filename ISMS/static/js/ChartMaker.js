@@ -85,15 +85,16 @@ const HUD = {
     toDateTime: document.getElementById("end_date"),
     submitBtn : document.getElementById("get-data"),
     addListeners () {
-        HUD.submitBtn.addEventListener("click", (e) => {
+        HUD.submitBtn.addEventListener("click", async (e) => {
             e.preventDefault()
             if (HUD.fromDateTime.value === "" || HUD.toDateTime.value === "") {
                 alert("Empty Values, Defaulting to initial range")
-                get_data()
+                await get_data()
+                GRAPHS.updateGraphs()
                 GRAPHS.customMode = false
             } else{
                 GRAPHS.customMode = true
-                get_data(HUD.fromDateTime.value, HUD.toDateTime.value)
+                await get_data(HUD.fromDateTime.value, HUD.toDateTime.value)
                 GRAPHS.updateGraphs()
             }
         });
@@ -127,15 +128,15 @@ const GRAPHS = {
         GRAPHS.mq135Chart = new Chart(GRAPHS.mq135Canvas, makeConfig(GRAPHS.mq135Canvas, GRAPHS.data.date_time, GRAPHS.data.ppm, "MQ135 Air Quality", "MQ135"))
     },
     fetchUpdates(data){
-        // if (new Date(data["date_time"]) > new Date(GRAPHS.data["date_time"][0]) && GRAPHS.customMode === false) {
-        //     for (const param in GRAPHS.data) {
-        //         GRAPHS.data[param].unshift(data[param])
-        //         if (GRAPHS.data.temperature.length < 30) {
-        //             GRAPHS.data[param].pop()
-        //         }
-        //     }
-        //     GRAPHS.updateGraphs()
-        // }
+        if (new Date(data["date_time"]) > new Date(GRAPHS.data["date_time"][0]) && GRAPHS.customMode === false) {
+            for (const param in GRAPHS.data) {
+                GRAPHS.data[param].unshift(data[param])
+                if (GRAPHS.data.temperature.length < 30) {
+                    GRAPHS.data[param].pop()
+                }
+            }
+            GRAPHS.updateGraphs()
+        }
     },
     updateGraphs(){
         GRAPHS.temperatureChart.update()
@@ -147,6 +148,12 @@ const GRAPHS = {
     }
 }
 
+function clearData() {
+    parametes = Object.keys(GRAPHS.data).map((key) => String(key))
+    parametes.forEach((param) => {
+        GRAPHS.data[param].splice(0, GRAPHS.data[param].length)
+    })
+}
 async function get_data(from="", to="") {
     await fetch(GRAPHS.API_URL + GRAPHS.clusterID, {
         method: "POST",
@@ -158,15 +165,10 @@ async function get_data(from="", to="") {
             from, to
         })
     }).then(res => res.json()).then(data => {
-        if (from && to){
-            console.log(data["temperature"]);
-            GRAPHS.temperatureChart.data.datasets[0].data = data["temperature"]
-            GRAPHS.temperatureChart.data.labels = data["date_time"]
-            GRAPHS.temperatureChart.update()
-        } else {
-            GRAPHS.data = data
+        clearData()
+        for (const param in data) {
+            GRAPHS.data[param].push(...data[param])
         }
-        console.log(GRAPHS.data);
     })
 }
 
