@@ -15,8 +15,8 @@ def is_host_responsive(host: str) -> bool:
 
 def get_datetimes(payload):
     if not payload.get("from") and not payload.get("to"):
-        start_datetime = datetime.datetime.now(tz=datetime.timezone(datetime.timedelta(seconds=19800)))
-        end_datetime = start_datetime - datetime.timedelta(days=1)
+        end_datetime = datetime.datetime.now(tz=datetime.timezone(datetime.timedelta(seconds=19800)))
+        start_datetime = end_datetime - datetime.timedelta(days=1)
     else:
         start_datetime = datetime.datetime.fromisoformat(payload.get("from"))
         end_datetime = datetime.datetime.fromisoformat(payload.get("to"))
