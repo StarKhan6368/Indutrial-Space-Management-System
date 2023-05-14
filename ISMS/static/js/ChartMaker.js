@@ -16,6 +16,7 @@ function getGradient(passedCanvas, choice) {
 }
 
 function makeConfig(passedCanvas, labels, data, data_label, title, yAxisLabel, colorChoice = "green") {
+    let delayed;
     config = {
         type: 'line',
         data: {
@@ -57,7 +58,7 @@ function makeConfig(passedCanvas, labels, data, data_label, title, yAxisLabel, c
                 x :{
                     type: "time",
                     time: {
-                        unit: "minute"
+                        unit: "second"
                     }
                 },
                 y: {
@@ -74,7 +75,6 @@ function makeConfig(passedCanvas, labels, data, data_label, title, yAxisLabel, c
     if (Array.isArray(data[0])) {
         config.data.datasets = []
         data.forEach((dataset, index) => {
-            console.log(colorChoice[index]);
             config.data.datasets.push({
                 label: data_label[index],
                 data: dataset,
