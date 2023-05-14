@@ -16,7 +16,7 @@ def login():
                 current_user.status = "ONLINE"
                 db.session.commit()
                 return redirect(url_for('main.index'))
-            elif check_user.status == "PENDING":
+            elif check_user and check_user.status == "PENDING":
                 flash("Account is not activated, Await Admin Confirmation", "warning")
             else:
                 flash("Invalid email or password", "danger")
