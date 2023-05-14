@@ -1,11 +1,21 @@
-function makeConfig(passed_canvas, labels, data, data_label, title) {
-    let delayed;
-    let gradient = passed_canvas.createLinearGradient(0, 0, 0, 400);
-    gradient.addColorStop(0, "#bbf7d0");
-    gradient.addColorStop(0.25, "#86efac");
-    gradient.addColorStop(0.5, "#4ade80");
-    gradient.addColorStop(0.75, "#22c55e");
-    gradient.addColorStop(1, "#16a34a");
+function getGradient(passedCanvas, choice) {
+    colors = {"green": ["#bbf7d0", "#86efac", "#4ade80", "#22c55e", "#16a34a"],
+              "red": ["#f7b6b6", "#f1556c", "#e73d4a", "#c92a2a", "#a61d1d"],
+              "blue": ["#144b8e", "#1a60b6", "#2076df", "#498fe5", "#71a8eb"],
+              "yellow": ["#f5c00a", "#f7cc37", "#f7cc37", "#f8d763", "#fae290"],
+              "purple": ["#7c3b96", "#9848b7", "#aa69c4", "#bd8ad1", "#d0acde"],
+              "orange": ["#d16200", "#ff7800", "#ff912e", "#ffa95d", "#ffc28b"]}
+    choosenColor = colors[choice]
+    const gradient = passedCanvas.createLinearGradient(0, 0, 0, 400);
+    gradient.addColorStop(0, choosenColor[0]);
+    gradient.addColorStop(0.25, choosenColor[1]);
+    gradient.addColorStop(0.5, choosenColor[2]);
+    gradient.addColorStop(0.75, choosenColor[3]);
+    gradient.addColorStop(1, choosenColor[4]);
+    return gradient
+}
+
+function makeConfig(passedCanvas, labels, data, data_label, title, yAxisLabel, colorChoice = "green") {
     config = {
         type: 'line',
         data: {
@@ -14,17 +24,12 @@ function makeConfig(passed_canvas, labels, data, data_label, title) {
                 label: null, 
                 data: null, 
                 fill: true,
-                backgroundColor: gradient,
+                backgroundColor: Array.isArray(colorChoice) ? "" : getGradient(passedCanvas, colorChoice),
                 pointBackgroundColor: "#64748b",
                 tension: 0.5
             }]
         },
         options: {
-            title:{
-                display: true,
-                text: null,
-                fontSize: 25
-            },
             legend:{
                 display: true,
                 position: "top"
@@ -55,6 +60,13 @@ function makeConfig(passed_canvas, labels, data, data_label, title) {
                         unit: "minute"
                     }
                 },
+                y: {
+                    ticks: {
+                        callback: function(value, index, ticks) {
+                            return `${value.toFixed(2)} ${yAxisLabel}`;
+                        }
+                    }
+                }
             },
             maintainAspectRatio: false
         }
@@ -62,11 +74,12 @@ function makeConfig(passed_canvas, labels, data, data_label, title) {
     if (Array.isArray(data[0])) {
         config.data.datasets = []
         data.forEach((dataset, index) => {
+            console.log(colorChoice[index]);
             config.data.datasets.push({
                 label: data_label[index],
                 data: dataset,
                 fill: true,
-                backgroundColor: gradient,
+                backgroundColor: getGradient(passedCanvas, colorChoice[index]),
                 pointBackgroundColor: "#64748b",
                 tension: 0.5
             })
@@ -76,7 +89,6 @@ function makeConfig(passed_canvas, labels, data, data_label, title) {
         config.data.datasets[0].label = data_label;
     }
     config.data.labels = labels;
-    config.options.title.text = title;
     return config
 }
 
@@ -112,6 +124,7 @@ const GRAPHS = {
     mq2LmCanvas: document.getElementById("mq2_lm-canvas").getContext('2d'),
     mq2HsCanvas: document.getElementById("mq2_hs-canvas").getContext('2d'),
     mq135Canvas : document.getElementById("mq135-canvas").getContext('2d'),
+    selectOption: document.getElementById("x-axis"),
     temperatureChart: null,
     humidityChart: null,
     pressureChart: null,
@@ -120,12 +133,21 @@ const GRAPHS = {
     mq135Chart: null,
     customMode: false,
     init () {
-        GRAPHS.temperatureChart = new Chart(GRAPHS.temperatureCanvas, makeConfig(GRAPHS.temperatureCanvas,GRAPHS.data.date_time, GRAPHS.data.temperature, "Temperature", "Temperature"))
-        GRAPHS.humidityChart = new Chart(GRAPHS.humidityCanvas, makeConfig(GRAPHS.humidityCanvas, GRAPHS.data.date_time, GRAPHS.data.humidity, "Humidity", "Humidity"))
-        GRAPHS.pressureChart = new Chart(GRAPHS.pressureCanvas, makeConfig(GRAPHS.pressureCanvas, GRAPHS.data.date_time, GRAPHS.data.pressure, "Pressure", "Pressure"))
-        GRAPHS.mq2HsChart = new Chart(GRAPHS.mq2HsCanvas, makeConfig(GRAPHS.mq2HsCanvas, GRAPHS.data.date_time, [GRAPHS.data.hydrogen, GRAPHS.data.smoke], ["Hydrogen", "Smoke"], "MQ2_HS"))
-        GRAPHS.mq2LmChart = new Chart(GRAPHS.mq2LmCanvas, makeConfig(GRAPHS.mq2LmCanvas, GRAPHS.data.date_time, [GRAPHS.data.lpg, GRAPHS.data.methane], ["Lpg", "Methane"], "MQ2_LM"))
-        GRAPHS.mq135Chart = new Chart(GRAPHS.mq135Canvas, makeConfig(GRAPHS.mq135Canvas, GRAPHS.data.date_time, GRAPHS.data.ppm, "MQ135 Air Quality", "MQ135"))
+        GRAPHS.temperatureChart = new Chart(GRAPHS.temperatureCanvas, makeConfig(GRAPHS.temperatureCanvas,GRAPHS.data.date_time, GRAPHS.data.temperature, "Temperature", "Temperature", "°C", "red"))
+        GRAPHS.humidityChart = new Chart(GRAPHS.humidityCanvas, makeConfig(GRAPHS.humidityCanvas, GRAPHS.data.date_time, GRAPHS.data.humidity, "Humidity", "Humidity", "%", "green"))
+        GRAPHS.pressureChart = new Chart(GRAPHS.pressureCanvas, makeConfig(GRAPHS.pressureCanvas, GRAPHS.data.date_time, GRAPHS.data.pressure, "Pressure", "Pressure", "hPa", "orange"))
+        GRAPHS.mq2HsChart = new Chart(GRAPHS.mq2HsCanvas, makeConfig(GRAPHS.mq2HsCanvas, GRAPHS.data.date_time, [GRAPHS.data.methane, GRAPHS.data.smoke], ["Methane", "Smoke"], "MQ2_MS", "PPM", ["blue", "yellow"]))
+        GRAPHS.mq2LmChart = new Chart(GRAPHS.mq2LmCanvas, makeConfig(GRAPHS.mq2LmCanvas, GRAPHS.data.date_time, [GRAPHS.data.lpg, GRAPHS.data.hydrogen], ["Lpg", "Hydrogen"], "MQ2_LH", "PPM", ["blue", "yellow"]))
+        GRAPHS.mq135Chart = new Chart(GRAPHS.mq135Canvas, makeConfig(GRAPHS.mq135Canvas, GRAPHS.data.date_time, GRAPHS.data.ppm, "MQ135 Air Quality", "MQ135", "PPM", "purple"))
+        GRAPHS.selectOption.addEventListener("change", () => {
+            GRAPHS.temperatureChart.config._config.options.scales.x.time.unit = GRAPHS.selectOption.value
+            GRAPHS.humidityChart.config._config.options.scales.x.time.unit = GRAPHS.selectOption.value
+            GRAPHS.pressureChart.config._config.options.scales.x.time.unit = GRAPHS.selectOption.value
+            GRAPHS.mq2HsChart.config._config.options.scales.x.time.unit = GRAPHS.selectOption.value
+            GRAPHS.mq2LmChart.config._config.options.scales.x.time.unit = GRAPHS.selectOption.value
+            GRAPHS.mq135Chart.config._config.options.scales.x.time.unit = GRAPHS.selectOption.value
+            GRAPHS.updateGraphs()
+        })
     },
     fetchUpdates(data){
         if (new Date(data["date_time"]) > new Date(GRAPHS.data["date_time"][0]) && GRAPHS.customMode === false) {
