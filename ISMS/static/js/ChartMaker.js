@@ -15,7 +15,7 @@ function getGradient(passedCanvas, choice) {
     return gradient
 }
 
-function makeConfig(passedCanvas, labels, data, data_label, title, yAxisLabel, colorChoice = "green") {
+function makeConfig(passedCanvas, labels, data, data_label, title, yAxisLabel, colorChoice, pointColors) {
     let delayed;
     config = {
         type: 'line',
@@ -26,7 +26,7 @@ function makeConfig(passedCanvas, labels, data, data_label, title, yAxisLabel, c
                 data: null, 
                 fill: true,
                 backgroundColor: Array.isArray(colorChoice) ? "" : getGradient(passedCanvas, colorChoice),
-                pointBackgroundColor: "#64748b",
+                pointBackgroundColor: "#333333",
                 tension: 0.5
             }]
         },
@@ -80,7 +80,7 @@ function makeConfig(passedCanvas, labels, data, data_label, title, yAxisLabel, c
                 data: dataset,
                 fill: true,
                 backgroundColor: getGradient(passedCanvas, colorChoice[index]),
-                pointBackgroundColor: "#64748b",
+                pointBackgroundColor: pointColors[index],
                 tension: 0.5
             })
         })
@@ -98,7 +98,8 @@ const HUD = {
     submitBtn : document.getElementById("get-data"),
     addListeners () {
         HUD.submitBtn.addEventListener("click", async (e) => {
-            e.preventDefault()
+            e.preventDefault();
+            DASH.chartParaDrop.scrollIntoView();
             if (HUD.fromDateTime.value === "" || HUD.toDateTime.value === "") {
                 alert("Empty Values, Defaulting to initial range")
                 await get_data()
@@ -136,8 +137,8 @@ const GRAPHS = {
         GRAPHS.temperatureChart = new Chart(GRAPHS.temperatureCanvas, makeConfig(GRAPHS.temperatureCanvas,GRAPHS.data.date_time, GRAPHS.data.temperature, "Temperature", "Temperature", "°C", "red"))
         GRAPHS.humidityChart = new Chart(GRAPHS.humidityCanvas, makeConfig(GRAPHS.humidityCanvas, GRAPHS.data.date_time, GRAPHS.data.humidity, "Humidity", "Humidity", "%", "green"))
         GRAPHS.pressureChart = new Chart(GRAPHS.pressureCanvas, makeConfig(GRAPHS.pressureCanvas, GRAPHS.data.date_time, GRAPHS.data.pressure, "Pressure", "Pressure", "hPa", "orange"))
-        GRAPHS.mq2HsChart = new Chart(GRAPHS.mq2HsCanvas, makeConfig(GRAPHS.mq2HsCanvas, GRAPHS.data.date_time, [GRAPHS.data.methane, GRAPHS.data.smoke], ["Methane", "Smoke"], "MQ2_MS", "PPM", ["blue", "yellow"]))
-        GRAPHS.mq2LmChart = new Chart(GRAPHS.mq2LmCanvas, makeConfig(GRAPHS.mq2LmCanvas, GRAPHS.data.date_time, [GRAPHS.data.lpg, GRAPHS.data.hydrogen], ["Lpg", "Hydrogen"], "MQ2_LH", "PPM", ["blue", "yellow"]))
+        GRAPHS.mq2HsChart = new Chart(GRAPHS.mq2HsCanvas, makeConfig(GRAPHS.mq2HsCanvas, GRAPHS.data.date_time, [GRAPHS.data.methane, GRAPHS.data.smoke], ["Methane", "Smoke"], "MQ2_MS", "PPM", ["blue", "yellow"], ["#FCFAF9", "#333333"]))
+        GRAPHS.mq2LmChart = new Chart(GRAPHS.mq2LmCanvas, makeConfig(GRAPHS.mq2LmCanvas, GRAPHS.data.date_time, [GRAPHS.data.lpg, GRAPHS.data.hydrogen], ["Lpg", "Hydrogen"], "MQ2_LH", "PPM", ["blue", "yellow"], ["#FCFAF9", "#333333"]))
         GRAPHS.mq135Chart = new Chart(GRAPHS.mq135Canvas, makeConfig(GRAPHS.mq135Canvas, GRAPHS.data.date_time, GRAPHS.data.ppm, "MQ135 Air Quality", "MQ135", "PPM", "purple"))
         GRAPHS.selectOption.addEventListener("change", () => {
             GRAPHS.temperatureChart.config._config.options.scales.x.time.unit = GRAPHS.selectOption.value
@@ -146,7 +147,8 @@ const GRAPHS = {
             GRAPHS.mq2HsChart.config._config.options.scales.x.time.unit = GRAPHS.selectOption.value
             GRAPHS.mq2LmChart.config._config.options.scales.x.time.unit = GRAPHS.selectOption.value
             GRAPHS.mq135Chart.config._config.options.scales.x.time.unit = GRAPHS.selectOption.value
-            GRAPHS.updateGraphs()
+            DASH.chartParaDrop.scrollIntoView();
+            GRAPHS.updateGraphs();
         })
     },
     fetchUpdates(data){
