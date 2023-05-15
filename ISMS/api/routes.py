@@ -79,14 +79,15 @@ def sensors(cluster_id):
     if payload.get("from") and not payload.get("to"):
         start_datetime = datetime.datetime.fromisoformat(payload.get("from"))
         end_datetime = datetime.datetime.fromisoformat(payload.get("to"))
-        data = Sensor.query.filter(
-            Sensor.date_time >= start_datetime,
-            Sensor.date_time <= end_datetime,
-            Sensor.cluster_id == cluster_id
-        ).order_by(desc(Sensor.date_time)).all()
     else:
-        data = Sensor.query.filter_by(cluster_id=cluster_id).order_by(desc(Sensor.date_time)).limit(30).all()
-    return prettify_data(data)
+        end_datetime = datetime.datetime.now()
+        start_datetime = end_datetime - datetime.timedelta(minutes=30)
+    data = Sensor.query.filter(
+        Sensor.date_time >= start_datetime,
+        Sensor.date_time <= end_datetime,
+        Sensor.cluster_id == cluster_id
+    ).order_by(desc(Sensor.date_time))
+    return prettify_data(data.all() if payload.get("from") else data.limit(30).all())
 
 
 @api.route("/api/thresholds")
