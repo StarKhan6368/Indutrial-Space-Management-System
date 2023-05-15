@@ -7,11 +7,10 @@
     <!-- Header Section -->
     <header class="flex flex-col md:justify-between md:flex-row space-y-2 md:space-y-0">
         <div>
-            <h1 class="text-2xl font-semibold md:text-4xl">Dashboard For Cluster ID: <span id="cluster_id">NA</span>
-            </h1>
+            <h1 class="text-2xl font-semibold md:text-4xl">Dashboard For Cluster ID: <span id="cluster_id">NA</span></h1>
             <p class="text-sm font-light">All enviormental parameters can be monitored below</p>
         </div>
-        <form action="" class="flex flex-col justify-center" name="time-format">
+        <form class="flex flex-col justify-center" name="time-format">
             <label for="x-axis" class="pl-2 text-sm font-light">Choose X-Axis Time Format:</label>
             <select name="x-axis" id="x-axis" class="rounded-md">
                 <option value="second">seconds</option>
@@ -23,8 +22,7 @@
                 <option value="year">years</option>
             </select>
         </form>
-        <form action="" method="post"
-            class="flex flex-col justify-center space-y-2 md:mt-0 md:space-y-0 md:items-center md:space-x-5 md:flex-row">
+        <form class="flex flex-col justify-center space-y-2 md:mt-0 md:space-y-0 md:items-center md:space-x-5 md:flex-row">
             <label class="flex flex-col">
                 <p class="pl-2 text-sm font-light">From:</p>
                 <input type="datetime-local" name="start_date" id="start_date" class="rounded-md w-full">
