@@ -1,4 +1,4 @@
-import json, os, datetime
+import json, os
 
 def prettify_data(sensor_data: list) -> str:
     prettified_data = {"temperature": [], "humidity": [], "pressure": [], "lpg": [], "methane": [], 
@@ -12,12 +12,3 @@ def prettify_data(sensor_data: list) -> str:
 def is_host_responsive(host: str) -> bool:
     response = os.system(f"ping -c 1 {host} > /dev/null 2>&1")
     return response == 0
-
-def get_datetimes(payload):
-    if not payload.get("from") and not payload.get("to"):
-        end_datetime = datetime.datetime.now(tz=datetime.timezone(datetime.timedelta(seconds=19800)))
-        start_datetime = end_datetime - datetime.timedelta(days=1)
-    else:
-        start_datetime = datetime.datetime.fromisoformat(payload.get("from"))
-        end_datetime = datetime.datetime.fromisoformat(payload.get("to"))
-    return start_datetime, end_datetime
