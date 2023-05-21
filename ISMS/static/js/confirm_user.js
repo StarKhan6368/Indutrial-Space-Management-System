@@ -1,18 +1,22 @@
 const USERS = {
     empList : document.getElementById("emp-list"),
-    EMPLOYEESAPI : "/api/employees/filter",
+    EMPLOYEESAPI : "/api/users/filter",
     CONFIRMAPI: "/api/user/confirm",
     data:[],
     values: {status: "PENDING"},
     empSearch : document.getElementById("emp-search"),
     async init(){
         await USERS.getEMPS()
-        USERS.populateEmps(USERS.data);
+        if (Object.keys(USERS.data).length !== 0) {
+            USERS.populateEmps(USERS.data);
+        }
         USERS.empSearch.addEventListener("input", (e) => {
-            let tempData = USERS.data.filter((emp)=>{
-                return emp.first_name.toLowerCase().includes(e.target.value.toLowerCase()) || emp.last_name.toLowerCase().includes(e.target.value.toLowerCase()) || emp.email_id.toLowerCase().includes(e.target.value.toLowerCase()) || emp.emp_id.toLowerCase().includes(e.target.value.toLowerCase())
-            })
-            USERS.populateEmps(tempData);
+            if (Object.keys(USERS.data).length !== 0) {
+                let tempData = USERS.data.filter((emp)=>{
+                    return emp.first_name.toLowerCase().includes(e.target.value.toLowerCase()) || emp.last_name.toLowerCase().includes(e.target.value.toLowerCase()) || emp.email_id.toLowerCase().includes(e.target.value.toLowerCase()) || emp.emp_id.toLowerCase().includes(e.target.value.toLowerCase())
+                })
+                USERS.populateEmps(tempData);
+            }
         })
         USERS.addListeners();
     },

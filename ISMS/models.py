@@ -133,3 +133,15 @@ class Sensor(db.Model):
         sensor_data = {c.name: getattr(self, c.name) for c in self.__table__.columns}
         sensor_data.update({'status': self.cluster.status})
         return sensor_data
+    
+class Entry(db.Model):
+    __tablename__ = "entries"
+    entry_id = db.Column(db.Integer, primary_key=True, nullable=False, default=db.func.next_val('entries_entry_id_seq'))
+    date_time = db.Column(db.DateTime, nullable=False)
+    emp_id = db.Column(db.String(8), db.ForeignKey("employees.emp_id"), nullable=False)
+    photo = db.Column(db.Text, nullable=False)
+    
+    def __init__(self, date_time, emp_id, photo):
+        self.date_time = date_time
+        self.emp_id = emp_id
+        self.photo = photo

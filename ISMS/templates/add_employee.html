@@ -1,0 +1,87 @@
+{% extends 'layout.html' %}
+{% block head %}
+<title>Add Employee</title>
+{% endblock %}
+{% block main %}
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<ul class="container px-3 py-1 mx-auto">
+  {% for message in messages %}
+  <div
+    class="flex items-center justify-between w-full px-4 py-3 text-red-700 bg-red-100 border border-red-400 rounded">
+    <li class="font-bold">{{ message }}</li>
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+      class="w-7 h-7 hover:cursor-pointer" id="dismiss">
+      <path stroke-linecap="round" stroke-linejoin="round"
+        d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+    </svg>
+  </div>
+  {% endfor %}
+</ul>
+{% endif %}
+{% endwith %}
+<main class="w-full p-3 space-y-4">
+    <div>
+        <h1 class="text-2xl font-semibold md:text-4xl">Add a new employee</h1>
+        <p class="text-sm font-light">Capture Image and wait for response</p>
+    </div>
+    <div class="flex flex-col md:items-center justify-center md:flex-row md:space-x-10">
+        <div class="flex flex-col items-center justify-center space-y-4">
+            <iframe src="" height="300" width="400" frameborder="0" class="rounded-md" id="frame-img"></iframe>
+            <div class="flex space-x-4">
+                <input type="number" name="cluster-id" id="cluster-id" value="1">
+                <button id="btn-img" class="px-10 py-2 text-white duration-500 bg-blue-500 rounded-md hover:bg-blue-700 hover:scale-110" type="submit">Capture Image</button>
+            </div>
+        </div>
+        <form action="" method="POST" class="flex flex-col space-y-2">
+            {{form.hidden_tag()}}
+            <label for="emp-id" class="flex flex-col">
+                <span class="pl-2 text-sm font-light">Employee ID</span>
+                {{form.emp_id(class="rounded-md", placeholder="XXXX-XXXX", type="text")}}
+            </label>    
+            <div class="flex flex-col space-y-4 md:space-x-2 md:flex-row md:space-y-0">
+                <label for="first_name" class="flex flex-col">
+                    <span class="pl-2 text-sm font-light">First Name</span>
+                    {{form.first_name(class="rounded-md", placeholder="John", type="text")}}
+                </label>
+                <label for="last_name" class="flex flex-col">
+                    <span class="pl-2 text-sm font-light">Last Name</span>
+                    {{form.last_name(class="rounded-md", placeholder="Doe", type="text")}}                
+                </label>
+            </div>
+            <div class="flex space-x-2">
+                <label class="flex flex-col w-1/2">
+                    <span class="pl-2 text-sm font-light">Gender</span>
+                    {{form.gender(class="rounded-md")}}
+                </label>
+                <label class="flex flex-col w-1/2">
+                    <span class="pl-2 text-sm font-light">Date of Birth</span>
+                    {{form.date_of_birth(class="rounded-md")}}
+                </label>
+            </div>
+            <label for="position" class="flex flex-col">
+                <span class="pl-2 text-sm font-light">Position</span>
+                {{form.position(class="rounded-md")}}
+            </label>
+            <label for="phone" class="flex flex-col">
+                <span class="pl-2 text-sm font-light">Phone Number</span>
+                {{form.phone_number(class="rounded-md", placeholder="Optional")}}
+            </label>
+            <label for="address" class="flex flex-col">
+                <span class="pl-2 text-sm font-light">Address</span>
+                {{form.address(class="rounded-md", placeholder="Optional")}} 
+            </label>
+            <label for="face-enc" class="flex flex-col">
+                <span class="font-light pl-2 text-sm">Face Encoding</span>
+                {{form.face_enc(class="rounded-md", id="face-enc-input", placeholder="Will be Automatically Filled")}}
+            </label>
+            <button type="submit"class="px-4 py-2 mt-1 font-bold text-white duration-500 bg-blue-500 rounded-md hover:bg-blue-700 hover:scale-105">
+                Add Employee
+            </button>
+        </form>
+    </div>
+</main>
+{% endblock %}
+{% block scripts %}
+<script src="{{url_for('static', filename='js/add_employee.js')}}"></script>
+{% endblock %}
