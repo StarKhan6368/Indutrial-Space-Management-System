@@ -1,0 +1,22 @@
+{% extends 'layout.html' %}
+{% block head %}
+<title>Employees</title>
+{% endblock %}
+{% block main %}
+<main class="flex flex-col p-4 mb-auto space-y-6">
+    <head class="flex flex-col w-full mb-auto md:flex-row"> 
+        <form class="flex items-center justify-center w-full flex-col">
+            <label for="name" class="flex flex-col justify-between w-full">
+                <div class="flex flex-col">
+                    <span class="pl-2 text-sm font-light">Enter Name of RTTTL File</span>
+                    <input type="search" name="rtttl" id="rtttl">
+                </div>
+            </label>
+        </form>
+        <ul class="grid grid-cols-1 gap-4 list-none md:grid-cols-5" id="rtttl-list"></ul>
+    </head>
+</main>
+{% endblock %}
+{% block scripts %}
+<script src="{{url_for('static', filename='js/play.js')}}"></script>
+{% endblock %}

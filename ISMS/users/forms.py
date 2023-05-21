@@ -15,3 +15,5 @@ class SignupForm(FlaskForm):
                 EqualTo("confirm_password", message="Passwords must match")])
     confirm_password = PasswordField("Confirm Password", validators=[InputRequired(), Length(min=8)])
     submit_signup = SubmitField("Sign up")
+
+    
