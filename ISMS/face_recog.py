@@ -21,17 +21,15 @@ class Camera:
         image = face_recognition.load_image_file(filename)
         encoded_image = face_recognition.face_encodings(image)
         if encoded_image:
-            for faces in encoded_image:
-                result = face_recognition.compare_faces(known_encodings, faces)
-                if result: return True, filename
+            result = face_recognition.compare_faces(known_encodings, encoded_image[0])
+            if result: return True, filename
+            else: return False, filename
         else:
             print("Face Not Found in the Image...")
             return False, filename
         
     def recognize(self, known_encodings, intensity=50):
-        self.flash(intensity)
-        filename = self.capture()
-        self.flash(0)
+        filename = self.capture(intensity=intensity)
         known_encodings = np.fromstring(known_encodings, sep=",", dtype=float)
         return self.face_compare([known_encodings], filename)
     
@@ -39,6 +37,7 @@ class Camera:
         image = face_recognition.load_image_file(filename)
         encoding = face_recognition.face_encodings(image)
         if encoding:
-            return np.array2string(encoding[0], separator=",", max_line_width=float("inf"))[1:-1], filename
+            encode = np.array2string(encoding[0], separator=",", max_line_width=float("inf"))[1:-1]
+            return encode
         else:
-            False, filename
+            False
