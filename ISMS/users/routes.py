@@ -28,9 +28,13 @@ def signup():
     if not current_user.is_authenticated:
         signup_form = SignupForm()
         if signup_form.validate_on_submit():
-            user = User.query.filter_by(email_id=signup_form.email_id.data).first()
+            user = User.query.filter_by(emp_id=signup_form.emp_id.data).first()
             employee = Employee.query.filter_by(emp_id=signup_form.emp_id.data.lower()).first()
             if not user and employee:
+                email_check = User.query.filter_by(email_id=signup_form.email_id.data).first()
+                if email_check:
+                    flash("Email already exists", "danger")
+                    return render_template("signup.html", form=signup_form)
                 hashed_password = bcrypt.generate_password_hash(signup_form.password.data).decode("utf-8")
                 new_user = User(emp_id=signup_form.emp_id.data.lower(), email_id=signup_form.email_id.data, password=hashed_password, status="PENDING", is_admin=False)
                 db.session.add(new_user)
@@ -39,7 +43,7 @@ def signup():
             elif not employee:
                 flash("Invalid Employee ID", "danger")
             else:
-                flash("User with this Email already exists", "danger")
+                flash("Account with Employee ID already exists", "danger")
         return render_template("signup.html", form=signup_form)
     return redirect(url_for('main.index'))
 

@@ -1,12 +1,12 @@
 from flask import abort
 from pathlib import Path
-from ISMS import db, mqtt
+from ISMS import db # mqtt
 import json, datetime, string, random
 from ISMS.face_recog import Camera
 from sqlalchemy import desc
 from ISMS.api.utils import prettify_data, is_host_responsive
 from flask import Blueprint, redirect, url_for, request
-from ISMS.models import Sensor, Employee, Cluster, User
+from ISMS.models import Sensor, Employee, Cluster, User, Entry
 from flask_login import current_user
 api = Blueprint("api", __name__)
 
@@ -24,9 +24,10 @@ def employees():
 def confirm_user_api():
     if not current_user.is_authenticated and not current_user.is_admin:
         return json.dumps({"error": 403, "message": "Unauthorized Access"})
-    employee_id = request.get_json()["emp_id"]
-    user = User.query.filter_by(emp_id=employee_id).first()
+    payload = request.get_json()
+    user = User.query.filter_by(emp_id=payload["emp_id"]).first()
     user.status = "OFFLINE"
+    user.is_admin = payload["is_admin"]
     db.session.commit()
     return json.dumps({"message": "User Confirmed"}, default=str)
 
@@ -110,22 +111,21 @@ def send_rtttl_list():
     rtttl_file_list = [file.name for file in rtttl_dir.glob("*")]
     return json.dumps({"total": len(rtttl_file_list), "file_list": rtttl_file_list}, default=str)
 
-@api.route("/api/mqtt_rtttl", methods=["POST"])
-def publish_to_mqtt():
-    if not current_user.is_authenticated and not current_user.is_admin:
-        return json.dumps({"error": 403, "message": "Unauthorized Access"})
-    payload = request.get_json()
-    with open(f"ISMS/rtttl_files/{payload['file_name']}.txt", "r") as file:
-        data = file.read()
-    mqtt.publish("MUSIC_DATA", json.dumps({"melody": data.strip()}) , qos=0)
-    return json.dumps({"message": "Published"}, default=str)
+# @api.route("/api/mqtt_rtttl", methods=["POST"])
+# def publish_to_mqtt():
+#     if not current_user.is_authenticated and not current_user.is_admin:
+#         return json.dumps({"error": 403, "message": "Unauthorized Access"})
+#     payload = request.get_json()
+#     with open(f"ISMS/rtttl_files/{payload['file_name']}.txt", "r") as file:
+#         data = file.read()
+#     mqtt.publish("MUSIC_DATA", json.dumps({"melody": data.strip(), "duty":256}) , qos=0)
+#     return json.dumps({"message": "Published"}, default=str)
     
 @api.route("/api/capture_and_validate", methods=["POST"])
 def cap_and_validate():
     if not current_user.is_authenticated and not current_user.is_admin:
         return json.dumps({"error": 403, "message": "Unauthorized Access"})
     camera_ip = request.get_json().get("camera_ip")
-    print(camera_ip)
     if camera_ip and is_host_responsive(camera_ip):
         camera = Camera(f"http://{camera_ip}")
         filename = camera.capture(filename=''.join(random.choice(string.ascii_lowercase + string.digits) for _ in range(10)))
@@ -135,6 +135,12 @@ def cap_and_validate():
     else:
         return json.dumps({"encoding":[]}, default=str)
         
+@api.route("/api/get_entries/<emp_id>")
+def get_entries(emp_id):
+    if not current_user.is_authenticated and not current_user.is_admin:
+        return json.dumps({"error": 403, "message": "Unauthorized Access"})
+    entries = Entry.query.filter_by(emp_id=emp_id).all()
+    return json.dumps([entry.as_dict() for entry in entries], default=str)
     
 @api.route("/api/thresholds")
 def get_thresholds():

@@ -47,7 +47,7 @@ async def display_readings():
     await asyncio.sleep(1)
     mq2_safe = lpg < 500  or methane < 500 or hydrogen < 500 or smoke < 500
     bme_safe = temperature < 35 or humidity < 60 or pressure < 1000
-    relay.value(mq2_safe and bme_safe)
+    relay.value(bme_safe)
     lcd.clear()
     lcd.putstr(f"MQ2: VALS {'SAFE  ' if mq2_safe else 'UNSAFE'}MQ135:{ppm:.2f} PPM")
     await asyncio.sleep(1)
@@ -76,13 +76,15 @@ async def display():
             
 async def watchmen():
     global granted
+    my_servo.write(0)
     print("Servo Unlocked")
     while ir1.value():
-        await asyncio.sleep(0)
+        await asyncio.sleep(0.1)
     buzz.tone(1000, 200, 256)
     while ir2.value():
-        await asyncio.sleep(0)
+        await asyncio.sleep(0.1)
     buzz.tone(1000, 200, 256)
+    my_servo.write(90)
     print("Servo Locked")
     granted = False
 
@@ -139,10 +141,10 @@ def mqtt_callback(topic, message):
         if "value" in message:
             relay.value(message["value"])
         elif "degree" in message:
-            pass # Make Servo Move
+            my_servo.write(message["degrees"])
     elif topic == MUSIC_TOPIC:
         if "melody" in message:
-            buzz.play_rtttl(message["melody"])
+            buzz.play_rtttl(message["melody"], message.get("duty") or 256)
     
 # Collect Garbage
 gc.collect()

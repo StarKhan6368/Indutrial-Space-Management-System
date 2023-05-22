@@ -71,7 +71,7 @@ class Employee(db.Model):
         values = values or self.__table__.columns.keys()
         employee_data = {attr : getattr(self, attr) for attr in values}
         if self.user:
-            employee_data.update({"email" : self.user.email_id, "acc_created": self.user.acc_created, "status":self.user.status})
+            employee_data.update({"email" : self.user.email_id, "acc_created": self.user.acc_created, "status":self.user.status, "is_admin": self.user.is_admin})
         return employee_data
 
 class Cluster(db.Model):
@@ -147,3 +147,7 @@ class Entry(db.Model):
         self.emp_id = emp_id
         self.cluster_id = cluster_id
         self.photo = photo
+    
+    def as_dict(self):
+        entries = {c.name: getattr(self, c.name) for c in self.__table__.columns}
+        return entries

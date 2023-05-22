@@ -1,6 +1,7 @@
 from flask import flash, abort, request
 import json
-from flask import Blueprint, redirect, render_template, url_for
+from pathlib import Path
+from flask import Blueprint, redirect, render_template, url_for, send_file
 from flask_login import current_user
 from ISMS import db
 from ISMS.main.forms import EmployeeForm
@@ -38,7 +39,10 @@ def users():
 @main.route("/employees/<emp_id>")
 def get_employee(emp_id):
     if not (current_user.is_authenticated and current_user.is_admin):
-        return abort(403)
+        if current_user.is_authenticated and current_user.emp_id == emp_id:
+            return render_template("employee.html", emp_id=emp_id)
+        else:
+            return abort(403)
     return render_template("employee.html", emp_id=emp_id)
 
 @main.route("/confirm_user")
@@ -49,9 +53,7 @@ def confirm_user():
 
 @main.route("/settings")
 def settings():
-    if not (current_user.is_authenticated and current_user.is_admin):
-        return abort(403)
-    return "NOPEE"
+    return abort(404)
 
 @main.route("/add_employee", methods=["GET","POST"])
 def add_employee():
@@ -67,6 +69,10 @@ def add_employee():
     elif request.method == "POST":
         flash("Invalid Form")
     return render_template("add_employee.html", form = employee_from)
+
+@main.route("/entry/<filename>")
+def return_image(filename):
+    return send_file(f"/home/starkhan/Major Project/face_recon/{filename}", mimetype="image/jpg")
 
 @main.route("/rtttl")
 def rtttl():

@@ -28,7 +28,7 @@ const EMPS = {
                 </div>
                 <div>
                     <p>Employee Email: <span class="font-normal" id="Employee-email">${employee.email}</span></p>
-                    <p>Employee Status: <span class="font-normal" id="Employee-status">${employee.status || "NA"}</span>
+                    <p>User Account Status: <span class="font-normal" id="Employee-status">${employee.status || "NA"}</span>
                     </p>
                 </div>
             </div>

@@ -155,7 +155,7 @@ const GRAPHS = {
         if (new Date(data["date_time"]) > new Date(GRAPHS.data["date_time"][0]) && GRAPHS.customMode === false) {
             for (const param in GRAPHS.data) {
                 GRAPHS.data[param].unshift(data[param])
-                if (GRAPHS.data.temperature.length < 30) {
+                if (GRAPHS.data.temperature.length > 30) {
                     GRAPHS.data[param].pop()
                 }
             }

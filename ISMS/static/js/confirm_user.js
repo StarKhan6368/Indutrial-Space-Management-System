@@ -21,20 +21,37 @@ const USERS = {
         USERS.addListeners();
     },
     addListeners() {
-        confirmBtns = document.querySelectorAll("#confirm-btn");
-        confirmBtns.forEach((btn) => {
+        confirmBtnsUser = document.querySelectorAll("#confirm-btn-user");
+        confirmBtnAdmin = document.querySelectorAll("#confirm-btn-admin");
+        confirmBtnsUser.forEach((btn) => {
             btn.addEventListener("click", (e) => {
-                if (confirm("Are you sure you want to add this User? ")){
-                    employee_id = e.target.previousElementSibling.firstElementChild.firstElementChild.textContent.split(":")[1];
-                    console.log(employee_id);
+                if (confirm("Are you sure you want to add this Employee as User ? ")){
+                    employee_id = e.target.parentElement.previousElementSibling.firstElementChild.firstElementChild.textContent.split(":")[1];
                     fetch(USERS.CONFIRMAPI, {
                         method: "POST",
                         headers: {
                             'Accept': 'application/json',
                             'Content-Type': 'application/json'
                         },
-                        body: JSON.stringify({"emp_id": employee_id.trim()})
+                        body: JSON.stringify({"emp_id": employee_id.trim(), "is_admin":false})
                     })
+                    e.target.parentElement.parentElement.remove()
+                }
+            })
+        })
+        confirmBtnAdmin.forEach((btn) => {
+            btn.addEventListener("click", (e) => {
+                if (confirm("Are you sure you want to add this Employee as Admin ? ")){
+                    employee_id = e.target.parentElement.previousElementSibling.firstElementChild.firstElementChild.textContent.split(":")[1];
+                    fetch(USERS.CONFIRMAPI, {
+                        method: "POST",
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({"emp_id": employee_id.trim(), "is_admin":true})
+                    })
+                    e.target.parentElement.parentElement.remove()
                 }
             })
         })
@@ -48,20 +65,21 @@ const USERS = {
             <div class="flex flex-col font-semibold md:text-lg md:flex-row md:space-x-20">
                 <div>
                     <p>Employee ID: <span class="font-normal" id="Employee-id">${employee.emp_id}</span></p>
-                    <h2>Employee Name: <span class="font-normal" id="Employee-name">${employee.first_name + " " + employee.last_name}</span>
-                    </h2>
-                </div>
-                <div>
+                    <h2>Employee Name: <span class="font-normal" id="Employee-name">${employee.first_name + " " + employee.last_name}</span></h2>
                     <p>Employee Email: <span class="font-normal" id="Employee-email">${employee.email_id}</span></p>
-                    <p>Employee Status: <span class="font-normal" id="Employee-status">${employee.status}</span></p>
                 </div>
                 <div>
+                    <p>Employee Status: <span class="font-normal" id="Employee-status">${employee.status}</span></p>
                     <p>Accoount Created On: <span class="font-normal" id="Employee-id">${employee.acc_created}</span></p>
                     <p>Employee Position: <span class="font-normal" id="Employee-status">${employee.position}</span></p>
                 </div>
             </div>
-            <button id="confirm-btn"
-                class="text-center py-2 font-bold text-white duration-500 bg-${color}-500 rounded-md md:py-3 md:px-12 hover:bg-${color}-700 hover:scale-105">Confirm User</button>
+            <div class="flex md:space-x-2 flex-col md:flex-row space-y-2 md:space-y-0">
+                <button id="confirm-btn-user"
+                    class="text-center py-2 font-bold text-white duration-500 bg-${color}-500 rounded-md md:py-3 md:px-12 hover:bg-${color}-700 hover:scale-105">Confirm User as User</button>
+                <button id="confirm-btn-admin"
+                    class="text-center py-2 font-bold text-white duration-500 bg-${color}-500 rounded-md md:py-3 md:px-12 hover:bg-${color}-700 hover:scale-105">Confirm User as Admin</button>
+            </div>
             </li>`
             USERS.empList.innerHTML += empCard;
         });
