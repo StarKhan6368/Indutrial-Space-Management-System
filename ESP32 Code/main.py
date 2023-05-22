@@ -47,16 +47,10 @@ async def display_readings():
     await asyncio.sleep(1)
     mq2_safe = lpg < 500  or methane < 500 or hydrogen < 500 or smoke < 500
     bme_safe = temperature < 35 or humidity < 60 or pressure < 1000
-    update_relay(mq2_safe and bme_safe)
+    relay.value(mq2_safe and bme_safe)
     lcd.clear()
     lcd.putstr(f"MQ2: VALS {'SAFE  ' if mq2_safe else 'UNSAFE'}MQ135:{ppm:.2f} PPM")
     await asyncio.sleep(1)
-    
-async def update_relay(values):
-    if not values:
-        realy.value(0)
-    else:
-        relay.value(1)
         
 # Asyncronous Function for controlling LCD Display Output
 async def display():
@@ -141,9 +135,11 @@ def mqtt_callback(topic, message):
         else:
             granted = False
         face_response = True if face_recon_message else False
-    elif topic == RELAY_TOPIC:
+    elif topic == CONTROL_TOPIC:
         if "value" in message:
             relay.value(message["value"])
+        elif "degree" in message:
+            pass # Make Servo Move
     elif topic == MUSIC_TOPIC:
         if "melody" in message:
             buzz.play_rtttl(message["melody"])
@@ -155,7 +151,7 @@ gc.collect()
 client.set_callback(mqtt_callback)
 client.subscribe(FACE_TOPIC, qos=0)
 client.subscribe(MUSIC_TOPIC, qos=0)
-client.subscribe(RELAY_TOPIC, qos=0)
+client.subscribe(CONTROL_TOPIC, qos=0)
 
 async def main():
     measure_task = asyncio.create_task(measure_and_send())
