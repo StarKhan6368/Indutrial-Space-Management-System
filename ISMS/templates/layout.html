@@ -96,8 +96,10 @@
           <div class="flex items-center justify-end w-full md:justify-between">
             <h1 class="hidden text-lg font-semibold md:block">Industrial Space Management System</h1>
             <div class="flex items-center space-x-4">
-              <img src="{{url_for('static', filename='images/avatar.jpg')}}" alt=""
-                class="w-8 h-8 duration-500 rounded-full md:w-10 md:h-10 hover:scale-125 hover:mr-2">
+              <a href='{{url_for("main.get_employee", emp_id=current_user.emp_id)}}'>
+                <img src="{{url_for('static', filename='images/avatar.jpg')}}" alt=""
+                  class="w-8 h-8 duration-500 rounded-full md:w-10 md:h-10 hover:scale-125 hover:mr-2">
+              </a>
               <div class="flex flex-col items-center justify-center">
                 <p class="text-sm font-bold">{{current_user.employee.first_name + " " + current_user.employee.last_name}}</p>
                 <p class="text-xs font-light">{{current_user.employee.position}}</p>

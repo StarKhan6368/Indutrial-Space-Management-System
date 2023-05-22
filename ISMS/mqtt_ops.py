@@ -45,19 +45,24 @@ def cam_data_handler(data):
             if cluster.camera_status == "ONLINE":
                 camera = Camera(f"http://{cluster.camera}")
                 employee = Employee.query.filter_by(emp_id = data["rfid"]).first()
+                if  not employee:
+                    message = json.dumps({"rfid":data["rfid"], "result":" INVALID RFID", "date_time":datetime.datetime.now()}, default=str)
+                    print("FACE ID Response: ", message)
+                    mqtt.publish("FACE_DATA", message)
+                    return None
                 recognized, filename = camera.recognize(employee.enc_photo, intensity=50)
-                result = f"ACCESS {'GRANTED' if recognized else 'DENIED '}"
+                result = f" ACCESS {'GRANTED' if recognized else 'DENIED '}  PLEASE PROCEED "
                 message = json.dumps({"rfid":data["rfid"], "result":result, "date_time":datetime.datetime.now()}, default=str)
                 print("FACE ID Response: ", message)
                 mqtt.publish("FACE_DATA", message)
                 if recognized:
-                    new_entry = Entry(date_time=datetime.datetime.now(), cluster_id=data["cluster_id"], employee_id=data["rfid"], photo=filename)
+                    new_entry = Entry(date_time=datetime.datetime.now(), cluster_id=data["cluster_id"], emp_id=data["rfid"], photo=filename)
                     db.session.add(new_entry)
                     db.session.commit()
                 else:
                     Path.unlink(filename)
             else:
-                message = json.dumps({"rfid":data["rfid"], "result":" CAMERA OFFLINE", "date_time":datetime.datetime.now()}, default=str)
+                message = json.dumps({"rfid":data["rfid"], "result":" CAMERA OFFLINE ", "date_time":datetime.datetime.now()}, default=str)
                 print("FACE ID Response: ", message)
                 mqtt.publish("FACE_DATA", message)
         
