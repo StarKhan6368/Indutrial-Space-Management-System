@@ -28,7 +28,7 @@ async def measure_and_send():
         methane = mq2.readMethane()
         lpg = mq2.readLPG()
         await asyncio.sleep(0)
-        ppm = mq135.get_corrected_ppm(temperature, humidity)
+        ppm = mq135.get_corrected_ppm(temperature, humidity) / 10
         await asyncio.sleep(0)
         message = {"date_time": time.localtime(time.time() + 19800), "free_heap": gc.mem_free(), "cluster_id":CLUSTER_ID, "temperature":temperature, "humidity":humidity, "pressure":pressure, "smoke":smoke, "hydrogen":hydrogen, "methane":methane, "lpg":lpg, "ppm": ppm}
         try:
@@ -45,9 +45,9 @@ async def display_readings():
     lcd.clear()
     lcd.putstr(f"T:{temperature:.2f}  H:{humidity:.2f}PRESSURE: {pressure:.2f}")
     await asyncio.sleep(1)
-    mq2_safe = lpg < 500  or methane < 500 or hydrogen < 500 or smoke < 500
-    bme_safe = temperature < 35 or humidity < 60 or pressure < 1000
-    relay.value(bme_safe)
+    mq2_safe = lpg < 300  and methane < 300 and hydrogen < 300 and smoke < 200
+    bme_safe = temperature < 35 and humidity < 60 and pressure < 1000
+    relay.value(bme_safe and mq2_safe and ppm < 800)
     lcd.clear()
     lcd.putstr(f"MQ2: VALS {'SAFE  ' if mq2_safe else 'UNSAFE'}MQ135:{ppm:.2f} PPM")
     await asyncio.sleep(1)
