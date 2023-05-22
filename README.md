@@ -1,8 +1,8 @@
-# IndustrialSpace Management System with Authorization
+# Industrial Space Management System
 
 ## Description
 
-The IndustrialSpace Management System with Authorization is a project designed to enhance security and access control in industrial spaces. This system utilizes various technologies, including Arduino with ESP32CAM, MicroPython, Flask, HTML5, CSS3, JavaScript, Tailwind CSS, and PostgreSQL with TimescaleDB extension.
+The Industrial Space Management System is a project designed to enhance security and access control in industrial spaces. This system utilizes various technologies, including Arduino with ESP32CAM, MicroPython, Flask, HTML5, CSS3, JavaScript, Tailwind CSS, and PostgreSQL with TimescaleDB extension.
 
 The primary objective of this project is to improve the efficiency of managing access permissions and enhance security by accurately verifying the identity of individuals using facial recognition and RFID cards.
 
