@@ -23,10 +23,10 @@ class Camera:
         if encoded_image:
             for faces in encoded_image:
                 result = face_recognition.compare_faces(known_encodings, faces)
-                if result: return True
-        else: 
-            print("NO FACE DETECTED....")
-            return False
+                if result: return True, filename
+        else:
+            print("Face Not Found in the Image...")
+            return False, filename
         
     def recognize(self, known_encodings, intensity=50):
         self.flash(intensity)
