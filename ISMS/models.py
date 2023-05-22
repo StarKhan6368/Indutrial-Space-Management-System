@@ -136,13 +136,14 @@ class Sensor(db.Model):
     
 class Entry(db.Model):
     __tablename__ = "entries"
-    entry_id = db.Column(db.Integer, primary_key=True, nullable=False, default=db.func.next_val('entries_entry_id_seq'))
+    entry_id = db.Column(db.Integer, primary_key=True, nullable=False)
     date_time = db.Column(db.DateTime, nullable=False)
     emp_id = db.Column(db.String(8), db.ForeignKey("employees.emp_id"), nullable=False)
     cluster_id = db.Column(db.Integer, db.ForeignKey("clusters.id"), nullable=False)
     photo = db.Column(db.Text, nullable=False)
     
-    def __init__(self, date_time, emp_id, photo):
+    def __init__(self, date_time, emp_id, photo, cluster_id):
         self.date_time = date_time
         self.emp_id = emp_id
+        self.cluster_id = cluster_id
         self.photo = photo
