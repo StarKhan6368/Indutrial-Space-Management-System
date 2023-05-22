@@ -139,6 +139,7 @@ class Entry(db.Model):
     entry_id = db.Column(db.Integer, primary_key=True, nullable=False, default=db.func.next_val('entries_entry_id_seq'))
     date_time = db.Column(db.DateTime, nullable=False)
     emp_id = db.Column(db.String(8), db.ForeignKey("employees.emp_id"), nullable=False)
+    cluster_id = db.Column(db.Integer, db.ForeignKey("clusters.id"), nullable=False)
     photo = db.Column(db.Text, nullable=False)
     
     def __init__(self, date_time, emp_id, photo):
