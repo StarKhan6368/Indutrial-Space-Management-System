@@ -1,6 +1,6 @@
 from flask import abort
 from pathlib import Path
-from ISMS import db # mqtt
+from ISMS import db, mqtt
 import json, datetime, string, random
 from ISMS.face_recog import Camera
 from sqlalchemy import desc
@@ -111,15 +111,15 @@ def send_rtttl_list():
     rtttl_file_list = [file.name for file in rtttl_dir.glob("*")]
     return json.dumps({"total": len(rtttl_file_list), "file_list": rtttl_file_list}, default=str)
 
-# @api.route("/api/mqtt_rtttl", methods=["POST"])
-# def publish_to_mqtt():
-#     if not current_user.is_authenticated and not current_user.is_admin:
-#         return json.dumps({"error": 403, "message": "Unauthorized Access"})
-#     payload = request.get_json()
-#     with open(f"ISMS/rtttl_files/{payload['file_name']}.txt", "r") as file:
-#         data = file.read()
-#     mqtt.publish("MUSIC_DATA", json.dumps({"melody": data.strip(), "duty":256}) , qos=0)
-#     return json.dumps({"message": "Published"}, default=str)
+@api.route("/api/mqtt_rtttl", methods=["POST"])
+def publish_to_mqtt():
+    if not current_user.is_authenticated and not current_user.is_admin:
+        return json.dumps({"error": 403, "message": "Unauthorized Access"})
+    payload = request.get_json()
+    with open(f"ISMS/rtttl_files/{payload['file_name']}.txt", "r") as file:
+        data = file.read()
+    mqtt.publish("MUSIC_DATA", json.dumps({"melody": data.strip(), "duty":256}) , qos=0)
+    return json.dumps({"message": "Published"}, default=str)
     
 @api.route("/api/capture_and_validate", methods=["POST"])
 def cap_and_validate():

@@ -51,12 +51,12 @@ def cam_data_handler(data):
                     mqtt.publish("FACE_DATA", message)
                     return None
                 recognized, filename = camera.recognize(employee.enc_photo, intensity=50)
-                result = f" ACCESS {'GRANTED' if recognized else 'DENIED '}  PLEASE PROCEED "
+                result = f" ACCESS {'GRANTED  PLEASE PROCEED ' if recognized else ' DENIED  PLS TRY AGAIN  '}"
                 message = json.dumps({"rfid":data["rfid"], "result":result, "date_time":datetime.datetime.now()}, default=str)
                 print("FACE ID Response: ", message)
                 mqtt.publish("FACE_DATA", message)
                 if recognized:
-                    new_entry = Entry(date_time=datetime.datetime.now(), cluster_id=data["cluster_id"], emp_id=data["rfid"], photo=filename)
+                    new_entry = Entry(date_time=datetime.datetime.now(), cluster_id=data["cluster_id"], emp_id=data["rfid"], photo=filename[10:])
                     db.session.add(new_entry)
                     db.session.commit()
                 else:
