@@ -6,14 +6,14 @@ from flask_mqtt import Mqtt
 
 app = Flask(__name__)
 # Databse Configs
-app.config["SECRET_KEY"] = "7980184255359f0b85941714f0bfbcee"
-app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://starkhan:bmwm3gtr@localhost:5432/ISMS"
+app.config["SECRET_KEY"] = "<SECRET_KEY>"
+app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://<username>:<password>@localhost:5432/ISMS"
 # MQTT Configs
 app.config['MQTT_BROKER_URL'] = '192.168.0.111'
 app.config["MQTT_CLIENT_ID"] = "ISMS"
 app.config['MQTT_BROKER_PORT'] = 1883
-app.config['MQTT_USERNAME'] = 'fedora'
-app.config['MQTT_PASSWORD'] = 'fedora@6174'
+app.config['MQTT_USERNAME'] = '<mqtt_username>'
+app.config['MQTT_PASSWORD'] = '<mqtt_password>'
 app.config['MQTT_KEEPALIVE'] = 10
 app.config['MQTT_TLS_ENABLED'] = False
 db = SQLAlchemy(app)
